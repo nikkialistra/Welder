@@ -6,5 +6,6 @@ namespace RoomObjects
     {
         Vector3 InteractionPosition { get; }
         Vector3 InteractionLookAtPoint { get; }
+        InteractableType InteractableType { get; }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Camera;
+using RoomObjects;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,9 +10,15 @@ namespace Welder
     [RequireComponent(typeof(NavMeshAgent))]
     public class WelderMover : MonoBehaviour
     {
-        [SerializeField] private Raycaster _raycaster;
-
+        public event Action<IInteractable> InteractableGot; 
+        public event Action InteractableReset; 
+        
+        [SerializeField] private MouseHandler _mouseHandler;
+        
+        [Space]
         [SerializeField] private float _lookAtSpeed;
+
+        private Coroutine _lookAtInteractable;
 
         private NavMeshAgent _navMeshAgent;
 
@@ -18,49 +26,69 @@ namespace Welder
 
         private void OnEnable()
         {
-            _raycaster.MoveToPoint += OnMoveToPoint;
-            _raycaster.MoveToInteractable += OnMoveToInteractable;
+            _mouseHandler.MoveToPoint += OnMoveToPoint;
+            _mouseHandler.MoveToInteractable += OnMoveToInteractable;
         }
 
         private void OnDisable()
         {
-            _raycaster.MoveToPoint -= OnMoveToPoint;
-            _raycaster.MoveToInteractable -= OnMoveToInteractable;
+            _mouseHandler.MoveToPoint -= OnMoveToPoint;
+            _mouseHandler.MoveToInteractable -= OnMoveToInteractable;
         }
 
-        private void OnMoveToPoint(Vector3 point) => _navMeshAgent.SetDestination(point);
-
-        private void OnMoveToInteractable(Vector3 position, Vector3 lookAtPoint)
+        private void OnMoveToPoint(Vector3 point)
         {
-            _navMeshAgent.SetDestination(position);
+            _navMeshAgent.SetDestination(point);
 
-            StartCoroutine(LookAtPointAfter(lookAtPoint));
+            ResetInteraction();
         }
 
-        private IEnumerator LookAtPointAfter(Vector3 point)
+        private void ResetInteraction()
         {
-            while (true)
-            {
-                yield return new WaitForSeconds(0.3f);
-                if (_navMeshAgent.remainingDistance > _navMeshAgent.stoppingDistance) 
-                    continue;
-                
-                StartCoroutine(LookAtPoint(point));
-                break;
-            }
+            if (_lookAtInteractable != null)
+                StopCoroutine(_lookAtInteractable);
+            InteractableReset?.Invoke();
         }
 
-        private IEnumerator LookAtPoint(Vector3 point)
+        private void OnMoveToInteractable(IInteractable interactable)
         {
-            var rotationDirection = point - transform.position;
+            _navMeshAgent.SetDestination(interactable.InteractionPosition);
+
+            _lookAtInteractable = StartCoroutine(LookAtInteractableAfter(interactable));
+        }
+
+        private IEnumerator LookAtInteractableAfter(IInteractable interactable)
+        {
+            foreach (var _ in WaitForStoppingDistance()) yield return _;
+
+            foreach (var _ in LookAt(interactable)) yield return _;
+
+            InteractableGot?.Invoke(interactable);
+        }
+
+        private IEnumerable LookAt(IInteractable interactable)
+        {
+            var rotationDirection = interactable.InteractionLookAtPoint - transform.position;
             rotationDirection.y = 0;
             var rotation = Quaternion.LookRotation(rotationDirection);
 
-            while (transform.rotation != rotation)
+            while (!QuaternionAreSame(transform.rotation, rotation))
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _lookAtSpeed * Time.fixedDeltaTime);
 
                 yield return null;
+            }
+        }
+
+        private bool QuaternionAreSame(Quaternion first, Quaternion second) => Mathf.Abs(Quaternion.Dot(first,second)) > 0.99f;
+
+        private IEnumerable WaitForStoppingDistance()
+        {
+            while (true)
+            {
+                yield return null;
+                if (_navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
+                    break;
             }
         }
     }
