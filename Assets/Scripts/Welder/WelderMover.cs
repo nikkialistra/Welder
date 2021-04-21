@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Camera;
-using RoomObjects;
+using RoomObjects.Contracts;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -72,7 +72,7 @@ namespace Welder
             rotationDirection.y = 0;
             var rotation = Quaternion.LookRotation(rotationDirection);
 
-            while (!QuaternionAreSame(transform.rotation, rotation))
+            while (QuaternionAreNotSame(transform.rotation, rotation))
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _lookAtSpeed * Time.fixedDeltaTime);
 
@@ -80,7 +80,7 @@ namespace Welder
             }
         }
 
-        private bool QuaternionAreSame(Quaternion first, Quaternion second) => Mathf.Abs(Quaternion.Dot(first,second)) > 0.99f;
+        private bool QuaternionAreNotSame(Quaternion first, Quaternion second) => Mathf.Abs(Quaternion.Dot(first,second)) < 0.99f;
 
         private IEnumerable WaitForStoppingDistance()
         {

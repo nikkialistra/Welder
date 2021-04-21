@@ -1,5 +1,5 @@
 ﻿using System;
-using RoomObjects;
+using RoomObjects.Contracts;
 using UnityEngine;
 
 namespace Camera
@@ -45,9 +45,14 @@ namespace Camera
             
             var interactable = hit.collider.gameObject.GetComponent<IInteractable>();
             if (interactable != null)
+            {
+                interactable.SelectBlink();
                 MoveToInteractable?.Invoke(interactable);
+            }
             else
+            {
                 MoveToPoint?.Invoke(hit.point);
+            }
 
         }
 
