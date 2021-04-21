@@ -38,9 +38,9 @@ namespace Welder
 
         private void OnMoveToPoint(Vector3 point)
         {
-            _navMeshAgent.SetDestination(point);
-
             ResetInteraction();
+            
+            _navMeshAgent.SetDestination(point);
         }
 
         private void ResetInteraction()
@@ -52,6 +52,7 @@ namespace Welder
 
         private void OnMoveToInteractable(IInteractable interactable)
         {
+            ResetInteraction();
             _navMeshAgent.SetDestination(interactable.InteractionPosition);
 
             _lookAtInteractable = StartCoroutine(LookAtInteractableAfter(interactable));

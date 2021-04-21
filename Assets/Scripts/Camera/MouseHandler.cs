@@ -10,9 +10,9 @@ namespace Camera
         public event Action<IInteractable> MoveToInteractable;
 
         public event Action<IInteractable> Interact; 
+        public event Action InteractWithoutTarget; 
     
-        [SerializeField] private LayerMask _validMove;
-        [SerializeField] private LayerMask _validInteract;
+        [SerializeField] private LayerMask _validLayers;
 
         private UnityEngine.Camera _camera;
 
@@ -40,7 +40,7 @@ namespace Camera
         {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
 
-            if (!Physics.Raycast(ray, out var hit, _validMove)) 
+            if (!Physics.Raycast(ray, out var hit, _validLayers)) 
                 return;
             
             var interactable = hit.collider.gameObject.GetComponent<IInteractable>();
@@ -60,12 +60,14 @@ namespace Camera
         {
             var ray = _camera.ScreenPointToRay(Input.mousePosition);
 
-            if (!Physics.Raycast(ray, out var hit, _validInteract)) 
+            if (!Physics.Raycast(ray, out var hit, _validLayers)) 
                 return;
             
             var interactable = hit.collider.gameObject.GetComponent<IInteractable>();
             if (interactable != null)
                 Interact?.Invoke(interactable);
+            else
+                InteractWithoutTarget?.Invoke();
         }
     }
 }

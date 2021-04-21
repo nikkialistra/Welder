@@ -11,9 +11,9 @@ namespace RoomObjects
         [SerializeField] private Transform _interactionLookAtPoint;
         
         [Space]
-        [SerializeField] private Material _deactivateMaterial;
-        [SerializeField] private Material _activateMaterial;
-        [SerializeField] private Material _blinkMaterial;
+        [SerializeField] private Color _deactivateColor = Color.white;
+        [SerializeField] private Color _activateColor = Color.yellow;
+        [SerializeField] private Color _blinkColor = Color.red;
         
         [Space]
         [SerializeField] private float _blinkTime = 0.3f;
@@ -36,19 +36,19 @@ namespace RoomObjects
             if (Activated)
                 return;
             
-            SetMaterial(_blinkMaterial);
+            SetColor(_blinkColor);
             StartCoroutine(SetDeactivateMaterialAfter());
         }
 
         public void Activate()
         {
-            SetMaterial(_activateMaterial);
+            SetColor(_activateColor);
             Activated = true;
         }
 
         public void Deactivate()
         {
-            SetMaterial(_deactivateMaterial);
+            SetColor(_deactivateColor);
             Activated = false;
         }
 
@@ -58,13 +58,13 @@ namespace RoomObjects
             if (Activated)
                 yield break;
             
-            SetMaterial(_deactivateMaterial);
+            SetColor(_deactivateColor);
         }
 
-        private void SetMaterial(Material material)
+        private void SetColor(Color color)
         {
             var materials = _meshRenderer.materials;
-            materials[0] = material;
+            materials[0].color = color;
             _meshRenderer.materials = materials;
         }
     }

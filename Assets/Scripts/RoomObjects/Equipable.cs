@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RoomObjects
 {
-    public class Equipment : RoomObject
+    public class Equipable : RoomObject
     {
         public override InteractableType GetInteractableType() => InteractableType.Equip;
         

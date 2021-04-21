@@ -22,16 +22,12 @@ namespace Welder
             {
                 case EquipmentType.Helmet:
                     return TryEquipSpecificPart(ref _helmetPutOn);
-                    break;
                 case EquipmentType.Suit:
                     return TryEquipSpecificPart(ref _suitPutOn);
-                    break;
                 case EquipmentType.Gloves:
                     return TryEquipSpecificPart(ref _glovesPutOn);
-                    break;
                 case EquipmentType.Shoe:
                     return TryEquipSpecificPart(ref _shoePutOn);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(equipment));
             }
@@ -39,7 +35,7 @@ namespace Welder
 
         private bool TryEquipSpecificPart(ref bool equipmentPart)
         {
-            if (_helmetPutOn) 
+            if (equipmentPart) 
                 return false;
             
             equipmentPart = true;

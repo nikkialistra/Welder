@@ -2,7 +2,7 @@
 
 namespace RoomObjects
 {
-    public class Pipe : RoomObject
+    public class Weldable : RoomObject
     {
         public override InteractableType GetInteractableType() => InteractableType.Weld;
     }
