@@ -2,7 +2,7 @@
 using RoomObjects.Contracts;
 using UnityEngine;
 
-namespace Camera
+namespace Services
 {
     public class MouseHandler : MonoBehaviour
     {
@@ -10,7 +10,7 @@ namespace Camera
         public event Action<IInteractable> MoveToInteractable;
 
         public event Action<IInteractable> Interact; 
-        public event Action InteractWithoutTarget; 
+        public event Action<Vector3> PutOnPoint; 
     
         [SerializeField] private LayerMask _validLayers;
 
@@ -67,7 +67,7 @@ namespace Camera
             if (interactable != null)
                 Interact?.Invoke(interactable);
             else
-                InteractWithoutTarget?.Invoke();
+                PutOnPoint?.Invoke(hit.point);
         }
     }
 }

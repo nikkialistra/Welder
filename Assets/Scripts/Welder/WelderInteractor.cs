@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Camera;
 using RoomObjects;
 using RoomObjects.Contracts;
+using Services;
 using UnityEngine;
 
 namespace Welder
@@ -12,17 +12,21 @@ namespace Welder
     [RequireComponent(typeof(WelderEquipment))]
     public class WelderInteractor : MonoBehaviour
     {
+        public bool CanPut => _raisingObject != null;
+        
         [SerializeField] private MouseHandler _mouseHandler;
 
         [Space]
         [SerializeField] private float _heightForUse;
+
         [SerializeField] private float _timeForUse;
+
 
         [Space]
         [SerializeField] private float _dangerDistance;
-        
+
         private IInteractable _interactable;
-        
+
         private Raisable _raisingObject;
 
         private WelderMover _welderMover;
@@ -40,18 +44,18 @@ namespace Welder
         {
             _welderMover.InteractableGot += OnInteractableGot;
             _welderMover.InteractableReset += OnInteractableReset;
+            _welderMover.Put += OnPut;
 
             _mouseHandler.Interact += OnInteract;
-            _mouseHandler.InteractWithoutTarget += OnInteractWithoutTarget;
         }
 
         private void OnDisable()
         {
             _welderMover.InteractableGot -= OnInteractableGot;
             _welderMover.InteractableReset -= OnInteractableReset;
+            _welderMover.Put -= OnPut;
 
             _mouseHandler.Interact -= OnInteract;
-            _mouseHandler.InteractWithoutTarget += OnInteractWithoutTarget;
         }
 
         private void OnInteractableGot(IInteractable interactable)
@@ -78,7 +82,7 @@ namespace Welder
                     TryRaise(interactable);
                     break;
                 case InteractableType.Weld:
-                    TryWeld(interactable);
+                    TryWeld();
                     break;
                 case InteractableType.Equip:
                     TryEquip(interactable);
@@ -88,13 +92,14 @@ namespace Welder
             }
         }
 
-        private void OnInteractWithoutTarget() => TryPutObject();
+        private void OnPut() => TryPutObject();
 
         private void TryPutObject()
         {
-            if (_raisingObject != null)
-                _raisingObject.Put(-_heightForUse, _timeForUse);
+            if (!CanPut)
+                return;
             
+            _raisingObject.Put(-_heightForUse, _timeForUse);
             _welderAnimator.Put();
 
             _raisingObject = null;
@@ -105,7 +110,7 @@ namespace Welder
             if (_interactable == null)
                 return false;
 
-            if (_raisingObject != null)
+            if (CanPut)
                 return false;
 
             return _interactable == interactable;
@@ -128,7 +133,7 @@ namespace Welder
         {
             if (!_welderEquipment.HasFullPack())
             {
-                ShowMessage("У меня не полное снаряжение, не стоит поднимать так");
+                ShowMessage("У меня не полное снаряжение, не стоит поднимать так. " + _welderEquipment.GetLackingParts());
                 return;
             }
 
@@ -142,17 +147,17 @@ namespace Welder
             _welderAnimator.Raise();
         }
 
-        private void TryWeld(IInteractable interactable)
+        private void TryWeld()
         {
             if (!_welderEquipment.HasFullPack())
             {
-                ShowMessage("У меня не полное снаряжение, опасно заниматься сваркой");
+                ShowMessage("У меня не полное снаряжение, опасно заниматься сваркой. " + _welderEquipment.GetLackingParts());
                 return;
             }
 
             if (CheckForDanger())
             {
-                ShowMessage("Бочки рядом, опасно работать");
+                ShowMessage("Бочки рядом, опасно работать.");
                 return;
             }
             

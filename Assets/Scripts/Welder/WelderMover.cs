@@ -1,38 +1,50 @@
 ﻿using System;
 using System.Collections;
-using Camera;
 using RoomObjects.Contracts;
+using Services;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace Welder
 {
     [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(WelderInteractor))]
     public class WelderMover : MonoBehaviour
     {
         public event Action<IInteractable> InteractableGot; 
         public event Action InteractableReset; 
         
-        [SerializeField] private MouseHandler _mouseHandler;
+        public event Action Put; 
         
+        [SerializeField] private MouseHandler _mouseHandler;
+
         [Space]
         [SerializeField] private float _lookAtSpeed;
 
+
         private Coroutine _lookAtInteractable;
+        private Coroutine _put;
 
         private NavMeshAgent _navMeshAgent;
+        private WelderInteractor _welderInteractor;
 
-        private void Awake() => _navMeshAgent = GetComponent<NavMeshAgent>();
+        private void Awake()
+        {
+            _navMeshAgent = GetComponent<NavMeshAgent>();
+            _welderInteractor = GetComponent<WelderInteractor>();
+        }
 
         private void OnEnable()
         {
             _mouseHandler.MoveToPoint += OnMoveToPoint;
+            _mouseHandler.PutOnPoint += OnPutOnPoint;
             _mouseHandler.MoveToInteractable += OnMoveToInteractable;
         }
 
         private void OnDisable()
         {
             _mouseHandler.MoveToPoint -= OnMoveToPoint;
+            _mouseHandler.PutOnPoint -= OnPutOnPoint;
             _mouseHandler.MoveToInteractable -= OnMoveToInteractable;
         }
 
@@ -41,6 +53,25 @@ namespace Welder
             ResetInteraction();
             
             _navMeshAgent.SetDestination(point);
+        }
+
+        private void OnPutOnPoint(Vector3 point)
+        {
+            if (!_welderInteractor.CanPut)
+                return;
+            
+            _navMeshAgent.SetDestination(point);
+
+            if (_put != null)
+                StopCoroutine(_put);
+            _put = StartCoroutine(PutAfter());
+        }
+
+        private IEnumerator PutAfter()
+        {
+            foreach (var _ in WaitForStoppingDistance()) yield return _;
+
+            Put?.Invoke();
         }
 
         private void ResetInteraction()

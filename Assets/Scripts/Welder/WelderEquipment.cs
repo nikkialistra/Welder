@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using RoomObjects;
 using UnityEngine;
 
@@ -31,6 +32,25 @@ namespace Welder
                 default:
                     throw new ArgumentOutOfRangeException(nameof(equipment));
             }
+        }
+
+        public string GetLackingParts()
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("Я еще не надел: ");
+            
+            if (!_helmetPutOn)
+                stringBuilder.Append("каску, ");
+            if (!_suitPutOn)
+                stringBuilder.Append("костюм, ");
+            if (!_glovesPutOn)
+                stringBuilder.Append("перчатки, ");
+            if (!_shoePutOn)
+                stringBuilder.Append("ботинки, ");
+
+            stringBuilder.Remove(stringBuilder.Length - 2, 2);
+
+            return stringBuilder.ToString();
         }
 
         private bool TryEquipSpecificPart(ref bool equipmentPart)
