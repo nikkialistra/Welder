@@ -1,29 +1,22 @@
-﻿using RoomObjects.Contracts;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RoomObjects
 {
     [RequireComponent(typeof(MeshFilter))]
-    public class Equipable : RoomObject
+    public class Equipable : MonoBehaviour
     {
-        public override InteractableType GetInteractableType() => InteractableType.Equip;
-        
-        [SerializeField] private Mesh _mesh;
+        [SerializeField] private Mesh _meshAfterEquipment;
 
-        public EquipmentType EquipmentType => _equipmentType;
-
-        [SerializeField] private EquipmentType _equipmentType;
-        
         private MeshFilter _meshFilter;
 
-        protected override void OnAwake()
+        private void Awake()
         {
             _meshFilter = GetComponent<MeshFilter>();
         }
 
         public void TakeOff()
         {
-            _meshFilter.mesh = _mesh;
+            _meshFilter.mesh = _meshAfterEquipment;
         }
     }
 }

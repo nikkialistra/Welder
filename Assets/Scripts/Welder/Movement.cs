@@ -5,7 +5,9 @@ namespace Welder
     [RequireComponent(typeof(CharacterController))]
     public class Movement : MonoBehaviour
     {
-        [SerializeField] private float _speed = 12f;
+        [SerializeField] private float _walkSpeed = 12f;
+        [SerializeField] private float _smoothTime = 0.03f;
+        
         [SerializeField] private float _gravity = 15;
 
         [SerializeField] private Transform _groundCheck;
@@ -14,6 +16,9 @@ namespace Welder
 
         private Vector3 _velocity;
         private bool _isGrounded;
+
+        private Vector2 _currentDirection = Vector2.zero;
+        Vector2 _currentDirectionVelocity = Vector2.zero;
 
         private CharacterController _controller;
 
@@ -30,12 +35,13 @@ namespace Welder
 
         private void UpdateMoving()
         {
-            var x = Input.GetAxis("Horizontal");
-            var z = Input.GetAxis("Vertical");
+            var targetDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
-            var move = transform.right * x + transform.forward * z;
+            _currentDirection = Vector2.SmoothDamp(_currentDirection, targetDirection, ref _currentDirectionVelocity, _smoothTime);
 
-            _controller.Move(move * (_speed * Time.deltaTime));
+            var move = (transform.right * _currentDirection.x + transform.forward * _currentDirection.y) * _walkSpeed;
+
+            _controller.Move(move * (_walkSpeed * Time.deltaTime));
         }
 
         private void UpdateFalling()

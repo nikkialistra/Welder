@@ -1,6 +1,5 @@
 ﻿using System;
 using RoomObjects;
-using RoomObjects.Contracts;
 using UnityEngine;
 using UnityEngine.UI;
 using Welder;
@@ -10,7 +9,7 @@ namespace Services
     [RequireComponent(typeof(ActionOutcome))]
     public class ActionHandler : MonoBehaviour
     {
-        [SerializeField] private WelderEquipment _welderEquipment;
+        [SerializeField] private Equipment _equipment;
 
         [SerializeField] private GameObject _equipChoices;
 
@@ -28,14 +27,27 @@ namespace Services
             _actionOutcome = GetComponent<ActionOutcome>();
         }
 
-        public void ShowEquipChoices(IInteractable interactable)
+        public void ShowChoices(RoomObject roomObject)
         {
-            var equipable = interactable as Equipable;
-            if (equipable == null)
-                throw new ArgumentException(nameof(interactable));
-            else
-                _equipable = equipable;
-            
+            switch (roomObject.InteractableType)
+            {
+                case InteractableType.Equip:
+                    var equipable = roomObject.gameObject.GetComponent<Equipable>();
+                    if (equipable == null)
+                    {
+                        return;
+                    }
+                    
+                    _equipable = equipable;
+                    break;
+                case InteractableType.Raise:
+                    break;
+                case InteractableType.Weld:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             _equipChoices.SetActive(true);
 
             _checkEquipment.onClick.AddListener(OnCheckEquipment);
@@ -54,12 +66,12 @@ namespace Services
         {
             if (!_equipmentChecked)
             {
-                _welderEquipment.TryEquipNotChecked(_equipable);
+                _equipment.EquipNotChecked(_equipable);
                 _actionOutcome.ShowDanger();
             }
             else
             {
-                _welderEquipment.TryEquip(_equipable);
+                _equipment.Equip(_equipable);
                 _actionOutcome.ShowCorrect();
             }
 

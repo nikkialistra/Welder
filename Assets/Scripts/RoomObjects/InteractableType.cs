@@ -1,4 +1,4 @@
-﻿namespace RoomObjects.Contracts
+﻿namespace RoomObjects
 {
     public enum InteractableType
     {

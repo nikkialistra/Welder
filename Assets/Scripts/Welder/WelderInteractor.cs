@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Linq;
 using RoomObjects;
-using RoomObjects.Contracts;
 using Services;
 using UnityEngine;
 
 namespace Welder
 {
-    [RequireComponent(typeof(WelderMover))]
     [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(WelderEquipment))]
+    [RequireComponent(typeof(Equipment))]
     public class WelderInteractor : MonoBehaviour
     {
         public bool CanPut => _raisingObject != null;
 
         [SerializeField] private ActionHandler _actionHandler;
-        
-        [Space]
-        [SerializeField] private MouseHandler _mouseHandler;
 
         [Space]
         [SerializeField] private float _heightForUse;
@@ -28,144 +23,65 @@ namespace Welder
         [Space]
         [SerializeField] private float _dangerDistance;
 
-        private IInteractable _interactable;
-
         private Raisable _raisingObject;
-
-        private WelderMover _welderMover;
-        private WelderAnimator _welderAnimator;
-        private WelderEquipment _welderEquipment;
+        
+        private Equipment _equipment;
 
         private void Awake()
         {
-            _welderMover = GetComponent<WelderMover>();
-            _welderAnimator = GetComponent<WelderAnimator>();
-            _welderEquipment = GetComponent<WelderEquipment>();
+            _equipment = GetComponent<Equipment>();
         }
 
-        private void OnEnable()
+        private void OnInteract()
         {
-            _welderMover.InteractableGot += OnInteractableGot;
-            _welderMover.InteractableReset += OnInteractableReset;
-            _welderMover.Put += OnPut;
-
-            _mouseHandler.Interact += OnInteract;
+            // if (!IsValidInteraction(interactable))
+            //     return;
+            //
+            // switch (interactable.GetInteractableType())
+            // {
+            //     case InteractableType.Raise:
+            //         TryRaise(interactable);
+            //         break;
+            //     case InteractableType.Weld:
+            //         TryWeld();
+            //         break;
+            //     case InteractableType.Equip:
+            //         TryEquip(interactable);
+            //         break;
+            //     default:
+            //         throw new ArgumentOutOfRangeException();
+            // }
         }
 
-        private void OnDisable()
+        private void TryEquip()
         {
-            _welderMover.InteractableGot -= OnInteractableGot;
-            _welderMover.InteractableReset -= OnInteractableReset;
-            _welderMover.Put -= OnPut;
-
-            _mouseHandler.Interact -= OnInteract;
+            // var equipable = interactable as Equipable;
+            // if (equipable == null)
+            //     return;
+            //
+            // _welderEquipment.Equip(equipable);
+            // OnInteractableReset();
         }
 
-        private void OnInteractableGot(IInteractable interactable)
+        private void TryRaise()
         {
-            _interactable = interactable;
-            _interactable.Activate();
-
-            switch (interactable.GetInteractableType())
-            {
-                case InteractableType.Raise:
-                    break;
-                case InteractableType.Weld:
-                    break;
-                case InteractableType.Equip:
-                    _actionHandler.ShowEquipChoices(interactable);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void OnInteractableReset()
-        {
-            _interactable?.Deactivate();
-            _interactable = null;
-            StopWeldIfNeeded();
-        }
-
-        private void OnInteract(IInteractable interactable)
-        {
-            if (!IsValidInteraction(interactable))
-                return;
-            
-            switch (interactable.GetInteractableType())
-            {
-                case InteractableType.Raise:
-                    TryRaise(interactable);
-                    break;
-                case InteractableType.Weld:
-                    TryWeld();
-                    break;
-                case InteractableType.Equip:
-                    TryEquip(interactable);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void OnPut() => TryPutObject();
-
-        private void TryPutObject()
-        {
-            if (!CanPut)
-                return;
-            
-            _raisingObject.Put(-_heightForUse, _timeForUse);
-            _welderAnimator.Put();
-
-            _raisingObject = null;
-        }
-
-        private bool IsValidInteraction(IInteractable interactable)
-        {
-            if (_interactable == null)
-                return false;
-
-            if (CanPut)
-                return false;
-
-            return _interactable == interactable;
-        }
-
-        private void TryEquip(IInteractable interactable)
-        {
-            var equipable = interactable as Equipable;
-            if (equipable == null)
-                return;
-
-            if (_welderEquipment.TryEquip(equipable))
-            {
-                OnInteractableReset();
-                Destroy(equipable.GameObject);
-            }
-        }
-
-        private void TryRaise(IInteractable interactable)
-        {
-            if (!_welderEquipment.Equiped)
+            if (!_equipment.Equiped)
             {
                 ShowMessage("У меня не полное снаряжение.");
                 return;
             }
 
-            var raisable = interactable as Raisable;
-            if (raisable == null)
-                return;
-
-            _raisingObject = raisable;
-            raisable.Raise(transform, _heightForUse, _timeForUse);
-
-            _welderAnimator.Raise();
+            // var raisable = interactable as Raisable;
+            // if (raisable == null)
+            //     return;
+            //
+            // _raisingObject = raisable;
+            // raisable.Raise(transform, _heightForUse, _timeForUse);
         }
 
         private void TryWeld()
         {
-            if (!_welderEquipment.Equiped)
+            if (!_equipment.Equiped)
             {
                 ShowMessage("У меня не полное снаряжение.");
                 return;
@@ -176,8 +92,6 @@ namespace Welder
                 ShowMessage("Бочки рядом, опасно работать.");
                 return;
             }
-            
-            _welderAnimator.StartWeld();
         }
 
         private bool CheckForDanger()
@@ -185,8 +99,6 @@ namespace Welder
             var raisables = FindObjectsOfType<Raisable>();
             return raisables.Any(raisable => Vector3.Distance(transform.position, raisable.transform.position) < _dangerDistance);
         }
-
-        private void StopWeldIfNeeded() => _welderAnimator.StopWeld();
 
         private static void ShowMessage(string message) => Debug.Log(message);
     }
