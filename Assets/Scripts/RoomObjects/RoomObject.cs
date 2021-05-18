@@ -29,7 +29,15 @@ namespace RoomObjects
 
         private MeshRenderer _meshRenderer;
 
-        private void Awake() => _meshRenderer = GetComponent<MeshRenderer>();
+        private void Awake()
+        {
+            _meshRenderer = GetComponent<MeshRenderer>();
+            OnAwake();
+        }
+
+        protected virtual void OnAwake()
+        {
+        }
 
         public void SelectBlink()
         {

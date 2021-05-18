@@ -13,7 +13,10 @@ namespace Welder
     public class WelderInteractor : MonoBehaviour
     {
         public bool CanPut => _raisingObject != null;
+
+        [SerializeField] private ActionHandler _actionHandler;
         
+        [Space]
         [SerializeField] private MouseHandler _mouseHandler;
 
         [Space]
@@ -62,6 +65,19 @@ namespace Welder
         {
             _interactable = interactable;
             _interactable.Activate();
+
+            switch (interactable.GetInteractableType())
+            {
+                case InteractableType.Raise:
+                    break;
+                case InteractableType.Weld:
+                    break;
+                case InteractableType.Equip:
+                    _actionHandler.ShowEquipChoices(interactable);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void OnInteractableReset()
@@ -122,7 +138,7 @@ namespace Welder
             if (equipable == null)
                 return;
 
-            if (_welderEquipment.TryEquip(equipable.EquipmentType))
+            if (_welderEquipment.TryEquip(equipable))
             {
                 OnInteractableReset();
                 Destroy(equipable.GameObject);
@@ -131,9 +147,9 @@ namespace Welder
 
         private void TryRaise(IInteractable interactable)
         {
-            if (!_welderEquipment.HasFullPack())
+            if (!_welderEquipment.Equiped)
             {
-                ShowMessage("У меня не полное снаряжение, не стоит поднимать так. " + _welderEquipment.GetLackingParts());
+                ShowMessage("У меня не полное снаряжение.");
                 return;
             }
 
@@ -149,9 +165,9 @@ namespace Welder
 
         private void TryWeld()
         {
-            if (!_welderEquipment.HasFullPack())
+            if (!_welderEquipment.Equiped)
             {
-                ShowMessage("У меня не полное снаряжение, опасно заниматься сваркой. " + _welderEquipment.GetLackingParts());
+                ShowMessage("У меня не полное снаряжение.");
                 return;
             }
 

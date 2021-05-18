@@ -1,6 +1,7 @@
 ﻿using System;
 using RoomObjects.Contracts;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Services
 {
@@ -15,11 +16,20 @@ namespace Services
         [SerializeField] private LayerMask _validLayers;
 
         private UnityEngine.Camera _camera;
+        
+        private EventSystem _eventSystem;
 
-        private void Awake() => _camera = UnityEngine.Camera.main;
+        private void Awake()
+        {
+            _camera = UnityEngine.Camera.main;
+            _eventSystem = EventSystem.current;
+        }
 
         private void Update()
         {
+            if (_eventSystem.IsPointerOverGameObject())
+                return;
+            
             CheckForMoveSignal();
             CheckForInteractSignal();
         }
