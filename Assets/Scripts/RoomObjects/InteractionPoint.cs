@@ -4,6 +4,6 @@ namespace RoomObjects
 {
     public class InteractionPoint : MonoBehaviour
     {
-        public RoomObject RoomObject { get; set; }
+        public Interactable Interactable { get; set; }
     }
 }

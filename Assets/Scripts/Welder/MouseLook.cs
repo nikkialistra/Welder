@@ -26,7 +26,7 @@ namespace Welder
             _currentMouseDelta = Vector2.SmoothDamp(_currentMouseDelta, mouseDelta, ref _currentMouseDeltaVelocity, _mouseSmoothTime);
 
             yRotation -= _currentMouseDelta.y * _mouseSensitivity;
-            yRotation = Mathf.Clamp(yRotation, -90f, 90);
+            yRotation = Mathf.Clamp(yRotation, -90f, 60);
             
             transform.localRotation = Quaternion.Euler(yRotation, 0, 0);
             _welder.Rotate(Vector3.up * (mouseDelta.x * _mouseSensitivity));

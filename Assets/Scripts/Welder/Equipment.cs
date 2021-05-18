@@ -5,20 +5,34 @@ namespace Welder
 {
     public class Equipment : MonoBehaviour
     {
+        [SerializeField] private RectTransform _weldingMask;
+
+        [SerializeField] private MeshFilter _leftHand;
+        [SerializeField] private MeshFilter _rightHand;
+        
+        [SerializeField] private Mesh _handInGlove;
+
         public bool Equiped => _equiped;
 
         private bool _equiped;
+        private bool _wasChecked;
 
-        public void Equip(Equipable equipable)
+        public void Equip(Interactable interactable, bool wasChecked)
         {
             _equiped = true;
-            equipable.TakeOff();
+            _wasChecked = wasChecked;
+            
+            ShowEquipment();
+            
+            interactable.Interact();
         }
 
-        public void EquipNotChecked(Equipable equipable)
+        private void ShowEquipment()
         {
-            _equiped = true;
-            equipable.TakeOff();
+            _weldingMask.gameObject.SetActive(true);
+
+            // _leftHand.mesh = _handInGlove;
+            // _rightHand.mesh = _handInGlove;
         }
     }
 }

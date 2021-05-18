@@ -16,7 +16,7 @@ namespace Services
         [SerializeField] private Button _checkEquipment;
         [SerializeField] private Button _use;
 
-        private Equipable _equipable;
+        private Interactable _interactable;
 
         private ActionOutcome _actionOutcome;
         
@@ -27,18 +27,41 @@ namespace Services
             _actionOutcome = GetComponent<ActionOutcome>();
         }
 
-        public void ShowChoices(RoomObject roomObject)
+        private void Update()
         {
-            switch (roomObject.InteractableType)
+            if (_interactable == null)
+            {
+                return;
+            }
+
+            CheckKeyPresses();
+        }
+
+        private void CheckKeyPresses()
+        {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                CheckEquipment();
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Use();
+            }
+        }
+
+        public void ShowChoices(Interactable interactable)
+        {
+            switch (interactable.InteractableType)
             {
                 case InteractableType.Equip:
-                    var equipable = roomObject.gameObject.GetComponent<Equipable>();
+                    var equipable = interactable.gameObject.GetComponent<Interactable>();
                     if (equipable == null)
                     {
                         return;
                     }
                     
-                    _equipable = equipable;
+                    _interactable = equipable;
                     break;
                 case InteractableType.Raise:
                     break;
@@ -50,11 +73,19 @@ namespace Services
 
             _equipChoices.SetActive(true);
 
-            _checkEquipment.onClick.AddListener(OnCheckEquipment);
-            _use.onClick.AddListener(OnUse);
+            _checkEquipment.onClick.AddListener(CheckEquipment);
+            _use.onClick.AddListener(Use);
         }
 
-        private void OnCheckEquipment()
+        public void HideEquipmentChoices()
+        {
+            _equipChoices.SetActive(false);
+            
+            _checkEquipment.onClick.RemoveListener(CheckEquipment);
+            _use.onClick.RemoveListener(Use);
+        }
+
+        private void CheckEquipment()
         {
             _checkEquipment.interactable = false;
             _equipmentChecked = true;
@@ -62,28 +93,23 @@ namespace Services
             _actionOutcome.ShowCorrect();
         }
 
-        private void OnUse()
+        private void Use()
         {
+            _checkEquipment.interactable = false;
+            _use.interactable = false;
+
             if (!_equipmentChecked)
             {
-                _equipment.EquipNotChecked(_equipable);
+                _equipment.Equip(_interactable, wasChecked: false);
                 _actionOutcome.ShowDanger();
             }
             else
             {
-                _equipment.Equip(_equipable);
+                _equipment.Equip(_interactable, wasChecked: true);
                 _actionOutcome.ShowCorrect();
             }
 
             HideEquipmentChoices();
-        }
-
-        private void HideEquipmentChoices()
-        {
-            _equipChoices.SetActive(false);
-            
-            _checkEquipment.onClick.RemoveListener(OnCheckEquipment);
-            _use.onClick.RemoveListener(OnUse);
         }
     }
 }

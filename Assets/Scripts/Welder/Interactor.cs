@@ -1,5 +1,4 @@
-﻿using RoomObjects;
-using Services;
+﻿using Services;
 using UnityEngine;
 
 namespace Welder
@@ -7,6 +6,7 @@ namespace Welder
     public class Interactor : MonoBehaviour
     {
         [SerializeField] private ActionHandler _actionHandler;
+        [SerializeField] private InteractionPointRepository _repository;
 
         [SerializeField] private float _interactionDistance;
         [SerializeField] private float _checkTimeInterval;
@@ -19,14 +19,8 @@ namespace Welder
             {
                 return;
             }
-            
-            foreach (var interactionPoint in FindObjectsOfType<InteractionPoint>())
-            {
-                if (Vector3.Distance(transform.position, interactionPoint.transform.position) <= _interactionDistance)
-                {
-                    _actionHandler.ShowChoices(interactionPoint.RoomObject);
-                }
-            }
+
+            SearchForCloseInteractionPoint();
         }
 
         private bool CheckIfTimeIntervalPassed()
@@ -40,6 +34,20 @@ namespace Welder
 
             _timePassed = 0f;
             return true;
+        }
+
+        private void SearchForCloseInteractionPoint()
+        {
+            foreach (var interactionPoint in _repository.InteractionPoints)
+            {
+                if (Vector3.Distance(transform.position, interactionPoint.transform.position) <= _interactionDistance)
+                {
+                    _actionHandler.ShowChoices(interactionPoint.Interactable);
+                    return;
+                }
+            }
+
+            _actionHandler.HideEquipmentChoices();
         }
     }
 }

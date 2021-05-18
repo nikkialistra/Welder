@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using RoomObjects;
-using Services;
+﻿using Services;
 using UnityEngine;
 
 namespace Welder
@@ -10,21 +7,11 @@ namespace Welder
     [RequireComponent(typeof(Equipment))]
     public class WelderInteractor : MonoBehaviour
     {
-        public bool CanPut => _raisingObject != null;
-
         [SerializeField] private ActionHandler _actionHandler;
-
-        [Space]
-        [SerializeField] private float _heightForUse;
-
-        [SerializeField] private float _timeForUse;
-
 
         [Space]
         [SerializeField] private float _dangerDistance;
 
-        private Raisable _raisingObject;
-        
         private Equipment _equipment;
 
         private void Awake()
@@ -79,26 +66,25 @@ namespace Welder
             // raisable.Raise(transform, _heightForUse, _timeForUse);
         }
 
-        private void TryWeld()
-        {
-            if (!_equipment.Equiped)
-            {
-                ShowMessage("У меня не полное снаряжение.");
-                return;
-            }
-
-            if (CheckForDanger())
-            {
-                ShowMessage("Бочки рядом, опасно работать.");
-                return;
-            }
-        }
-
-        private bool CheckForDanger()
-        {
-            var raisables = FindObjectsOfType<Raisable>();
-            return raisables.Any(raisable => Vector3.Distance(transform.position, raisable.transform.position) < _dangerDistance);
-        }
+        // private void TryWeld()
+        // {
+        //     if (!_equipment.Equiped)
+        //     {
+        //         ShowMessage("У меня не полное снаряжение.");
+        //         return;
+        //     }
+        //
+        //     if (CheckForDanger())
+        //     {
+        //         ShowMessage("Бочки рядом, опасно работать.");
+        //         return;
+        //     }
+        // }
+        //
+        // private bool CheckForDanger()
+        // {
+        //     return raisables.Any(raisable => Vector3.Distance(transform.position, raisable.transform.position) < _dangerDistance);
+        // }
 
         private static void ShowMessage(string message) => Debug.Log(message);
     }
