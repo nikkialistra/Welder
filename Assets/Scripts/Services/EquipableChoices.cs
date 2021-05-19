@@ -6,11 +6,11 @@ using Welder;
 namespace Services
 {
     [RequireComponent(typeof(ActionOutcome))]
-    public class ActionHandler : MonoBehaviour
+    public class EquipableChoices : MonoBehaviour
     {
         [SerializeField] private Equipment _equipment;
 
-        [SerializeField] private GameObject _equipChoices;
+        [SerializeField] private RectTransform _choices;
 
         [SerializeField] private Button _checkEquipment;
         [SerializeField] private Button _use;
@@ -51,18 +51,32 @@ namespace Services
 
         public void ShowChoices(Equipable equipable)
         {
+            if (_showing && _equipable == equipable)
+            {
+                return;
+            }
+
             _showing = true;
             _equipable = equipable;
             
-            _equipChoices.SetActive(true);
+            ShowEquipmentChoices();
+        }
 
+        private void ShowEquipmentChoices()
+        {
+            _choices.gameObject.SetActive(true);
+
+            _checkEquipment.interactable = !_equipable.IsChecked;
+
+            _use.interactable = true;
+            
             _checkEquipment.onClick.AddListener(CheckEquipment);
             _use.onClick.AddListener(Use);
         }
 
-        public void HideEquipmentChoices()
+        private void HideEquipmentChoices()
         {
-            _equipChoices.SetActive(false);
+            _choices.gameObject.SetActive(false);
             
             _checkEquipment.onClick.RemoveListener(CheckEquipment);
             _use.onClick.RemoveListener(Use);
@@ -71,7 +85,7 @@ namespace Services
         private void CheckEquipment()
         {
             _checkEquipment.interactable = false;
-            _equipmentChecked = true;
+            _equipable.Check();
             
             _actionOutcome.ShowCorrect();
         }
@@ -81,15 +95,16 @@ namespace Services
             _checkEquipment.interactable = false;
             _use.interactable = false;
 
-            if (!_equipmentChecked)
+            _equipment.Equip(_equipable);
+            
+            if (_equipable.IsChecked)
             {
-                _equipment.Equip(_equipable, wasChecked: false);
-                _actionOutcome.ShowDanger();
+                _actionOutcome.ShowCorrect();
             }
             else
             {
-                _equipment.Equip(_equipable, wasChecked: true);
-                _actionOutcome.ShowCorrect();
+                _actionOutcome.ShowDanger();
+
             }
 
             HideEquipmentChoices();

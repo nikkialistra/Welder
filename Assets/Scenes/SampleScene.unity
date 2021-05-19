@@ -208,9 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7e63dab7444d7cae9b507222d510cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionHandler: {fileID: 1502100890}
   _interactionDistance: 3
   _checkTimeInterval: 0.3
+  _equipableChoices: {fileID: 1574679986}
 --- !u!114 &112604882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1473,7 +1473,7 @@ RectTransform:
   m_Children:
   - {fileID: 998718372}
   m_Father: {fileID: 1502100889}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1590,6 +1590,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 851097917}
+  - component: {fileID: 851097919}
   - component: {fileID: 851097918}
   m_Layer: 0
   m_Name: Services
@@ -1621,9 +1622,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 851097916}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e157a70bd38a458dba41997f7a629e23, type: 3}
+  m_Script: {fileID: 11500000, guid: de14098320ef4c96923c5da028ddaf80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _equipment: {fileID: 112604882}
+  _choices: {fileID: 0}
+  _checkEquipment: {fileID: 1724766418}
+  _use: {fileID: 2042028955}
+--- !u!114 &851097919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851097916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70b00d1be23d48a8a51a54cd15c7b052, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _danger: {fileID: 1469076672}
+  _correct: {fileID: 337657653}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -3228,6 +3247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f154145a28c04dbfb1477dad0e54bf02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _equipableChoices: {fileID: 851097918}
   _equipmentTypes: 1
 --- !u!1 &1274996280
 GameObject:
@@ -3574,8 +3594,6 @@ GameObject:
   - component: {fileID: 1502100888}
   - component: {fileID: 1502100887}
   - component: {fileID: 1502100886}
-  - component: {fileID: 1502100890}
-  - component: {fileID: 1502100891}
   - component: {fileID: 1502100892}
   m_Layer: 5
   m_Name: UI
@@ -3657,8 +3675,8 @@ RectTransform:
   m_Children:
   - {fileID: 1093494432}
   - {fileID: 2018477876}
-  - {fileID: 738231176}
   - {fileID: 1904521282}
+  - {fileID: 738231176}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3667,36 +3685,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1502100890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1502100885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de14098320ef4c96923c5da028ddaf80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _equipment: {fileID: 112604882}
-  _equipChoices: {fileID: 1574679985}
-  _checkEquipment: {fileID: 1724766418}
-  _use: {fileID: 2042028955}
---- !u!114 &1502100891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1502100885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b00d1be23d48a8a51a54cd15c7b052, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _danger: {fileID: 1469076672}
-  _correct: {fileID: 337657653}
 --- !u!114 &1502100892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3721,7 +3709,7 @@ GameObject:
   - component: {fileID: 1574679986}
   - component: {fileID: 1574679987}
   m_Layer: 5
-  m_Name: EquipActions
+  m_Name: EquipableChoices
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6412,6 +6400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f154145a28c04dbfb1477dad0e54bf02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _equipableChoices: {fileID: 851097918}
   _equipmentTypes: 0
 --- !u!1 &1818896105
 GameObject:
@@ -6709,7 +6698,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1502100889}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6764,7 +6753,7 @@ GameObject:
   - component: {fileID: 2018477876}
   - component: {fileID: 2018477878}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Choices
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,15 +1,15 @@
 ﻿using RoomObjects.Interactables;
-using Services;
 using UnityEngine;
 
 namespace Welder
 {
     public class Interactor : MonoBehaviour
     {
-        [SerializeField] private ActionHandler _actionHandler;
-
         [SerializeField] private float _interactionDistance;
         [SerializeField] private float _checkTimeInterval;
+
+        [SerializeField] private RectTransform _equipableChoices;
+        
         
         private float _timePassed;
         
@@ -51,12 +51,17 @@ namespace Welder
             {
                 if (hit.transform.TryGetComponent(out IInteractable interactable))
                 {
-                    interactable.ShowChoicesWith(_actionHandler);
+                    interactable.ShowChoices();
                     return;
                 }
             }
-            
-            _actionHandler.HideEquipmentChoices();
+
+            DeactivateAllChoices();
+        }
+
+        private void DeactivateAllChoices()
+        {
+            _equipableChoices.gameObject.SetActive(false);
         }
     }
 }
