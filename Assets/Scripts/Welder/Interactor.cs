@@ -1,4 +1,5 @@
-﻿using Services;
+﻿using RoomObjects.Interactables;
+using Services;
 using UnityEngine;
 
 namespace Welder
@@ -6,13 +7,19 @@ namespace Welder
     public class Interactor : MonoBehaviour
     {
         [SerializeField] private ActionHandler _actionHandler;
-        [SerializeField] private InteractionPointRepository _repository;
 
         [SerializeField] private float _interactionDistance;
         [SerializeField] private float _checkTimeInterval;
         
         private float _timePassed;
         
+        private Camera _camera;
+
+        private void Awake()
+        {
+            _camera = Camera.main;
+        }
+
         private void FixedUpdate()
         {
             if (!CheckIfTimeIntervalPassed())
@@ -38,15 +45,17 @@ namespace Welder
 
         private void SearchForCloseInteractionPoint()
         {
-            foreach (var interactionPoint in _repository.InteractionPoints)
+            var ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+
+            if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance))
             {
-                if (Vector3.Distance(transform.position, interactionPoint.transform.position) <= _interactionDistance)
+                if (hit.transform.TryGetComponent(out IInteractable interactable))
                 {
-                    _actionHandler.ShowChoices(interactionPoint.Interactable);
+                    interactable.ShowChoicesWith(_actionHandler);
                     return;
                 }
             }
-
+            
             _actionHandler.HideEquipmentChoices();
         }
     }

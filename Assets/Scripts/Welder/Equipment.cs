@@ -1,10 +1,14 @@
-﻿using RoomObjects;
+﻿using System;
+using RoomObjects.Interactables;
 using UnityEngine;
 
 namespace Welder
 {
     public class Equipment : MonoBehaviour
     {
+        public bool MaskEquiped => _maskEquiped;
+        public bool GlovesEquiped => _glovesEquiped;
+
         [SerializeField] private RectTransform _weldingMask;
 
         [SerializeField] private MeshFilter _leftHand;
@@ -12,25 +16,37 @@ namespace Welder
         
         [SerializeField] private Mesh _handInGlove;
 
-        public bool Equiped => _equiped;
-
-        private bool _equiped;
+        private bool _maskEquiped;
+        private bool _glovesEquiped;
+        
         private bool _wasChecked;
 
-        public void Equip(Interactable interactable, bool wasChecked)
+        public void Equip(Equipable equipable, bool wasChecked)
         {
-            _equiped = true;
-            _wasChecked = wasChecked;
-            
-            ShowEquipment();
-            
-            interactable.Interact();
+            switch (equipable.EquipmentTypes)
+            {
+                case RoomObjects.Interactables.EquipmentTypes.Mask:
+                    _maskEquiped = true;
+                    ShowMask();
+                    break;
+                case RoomObjects.Interactables.EquipmentTypes.Gloves:
+                    _glovesEquiped = true;
+                    ShowGloves();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            equipable.Interact();
         }
 
-        private void ShowEquipment()
+        private void ShowMask()
         {
             _weldingMask.gameObject.SetActive(true);
+        }
 
+        private void ShowGloves()
+        {
             // _leftHand.mesh = _handInGlove;
             // _rightHand.mesh = _handInGlove;
         }

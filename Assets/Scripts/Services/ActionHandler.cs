@@ -1,5 +1,4 @@
-﻿using System;
-using RoomObjects;
+﻿using RoomObjects.Interactables;
 using UnityEngine;
 using UnityEngine.UI;
 using Welder;
@@ -16,10 +15,10 @@ namespace Services
         [SerializeField] private Button _checkEquipment;
         [SerializeField] private Button _use;
 
-        private Interactable _interactable;
-
         private ActionOutcome _actionOutcome;
-        
+
+        private Equipable _equipable;
+        private bool _showing;
         private bool _equipmentChecked;
 
         private void Awake()
@@ -29,7 +28,7 @@ namespace Services
 
         private void Update()
         {
-            if (_interactable == null)
+            if (!_showing)
             {
                 return;
             }
@@ -50,27 +49,11 @@ namespace Services
             }
         }
 
-        public void ShowChoices(Interactable interactable)
+        public void ShowChoices(Equipable equipable)
         {
-            switch (interactable.InteractableType)
-            {
-                case InteractableType.Equip:
-                    var equipable = interactable.gameObject.GetComponent<Interactable>();
-                    if (equipable == null)
-                    {
-                        return;
-                    }
-                    
-                    _interactable = equipable;
-                    break;
-                case InteractableType.Raise:
-                    break;
-                case InteractableType.Weld:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
+            _showing = true;
+            _equipable = equipable;
+            
             _equipChoices.SetActive(true);
 
             _checkEquipment.onClick.AddListener(CheckEquipment);
@@ -100,12 +83,12 @@ namespace Services
 
             if (!_equipmentChecked)
             {
-                _equipment.Equip(_interactable, wasChecked: false);
+                _equipment.Equip(_equipable, wasChecked: false);
                 _actionOutcome.ShowDanger();
             }
             else
             {
-                _equipment.Equip(_interactable, wasChecked: true);
+                _equipment.Equip(_equipable, wasChecked: true);
                 _actionOutcome.ShowCorrect();
             }
 

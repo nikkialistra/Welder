@@ -35,7 +35,7 @@ namespace Services
                 StopCoroutine(_dangerCoroutine);
         }
 
-        private IEnumerator ShowAndDisableAfter(Image image)
+        private static IEnumerator ShowAndDisableAfter(Image image)
         {
             image.enabled = false;
             
