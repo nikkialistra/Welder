@@ -1,4 +1,5 @@
-﻿using RoomObjects.Interactables;
+﻿using System.Collections;
+using RoomObjects.Interactables;
 using UnityEngine;
 
 namespace Welder
@@ -9,8 +10,7 @@ namespace Welder
         [SerializeField] private float _checkTimeInterval;
 
         [SerializeField] private RectTransform _equipableChoices;
-        
-        
+
         private float _timePassed;
         
         private Camera _camera;

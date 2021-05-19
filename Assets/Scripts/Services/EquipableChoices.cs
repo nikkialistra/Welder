@@ -1,4 +1,5 @@
-﻿using RoomObjects.Interactables;
+﻿using System.Collections;
+using RoomObjects.Interactables;
 using UnityEngine;
 using UnityEngine.UI;
 using Welder;
@@ -20,6 +21,8 @@ namespace Services
         private Equipable _equipable;
         private bool _showing;
         private bool _equipmentChecked;
+        
+        private Coroutine _hideAfterCoroutine;
 
         private void Awake()
         {
@@ -28,7 +31,7 @@ namespace Services
 
         private void Update()
         {
-            if (!_showing)
+            if (!_showing || _equipable == null)
             {
                 return;
             }
@@ -64,6 +67,11 @@ namespace Services
 
         private void ShowEquipmentChoices()
         {
+            if (_hideAfterCoroutine != null)
+            {
+                StopCoroutine(_hideAfterCoroutine);
+            }
+
             _choices.gameObject.SetActive(true);
 
             _checkEquipment.interactable = !_equipable.IsChecked;
@@ -76,10 +84,20 @@ namespace Services
 
         private void HideEquipmentChoices()
         {
-            _choices.gameObject.SetActive(false);
+            _equipable = null;
             
             _checkEquipment.onClick.RemoveListener(CheckEquipment);
             _use.onClick.RemoveListener(Use);
+            _use.onClick.RemoveAllListeners();
+
+            _hideAfterCoroutine = StartCoroutine(HideAfter());
+        }
+
+        private IEnumerator HideAfter()
+        {
+            yield return new WaitForSeconds(0.3f);
+            _choices.gameObject.SetActive(false);
+            _showing = false;
         }
 
         private void CheckEquipment()

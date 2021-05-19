@@ -16,6 +16,7 @@ namespace Services
         {
             StopCoroutines();
 
+            DisableAll();
             _correctCoroutine = StartCoroutine(ShowAndDisableAfter(_correct));
         }
 
@@ -23,6 +24,7 @@ namespace Services
         {
             StopCoroutines();
 
+            DisableAll();
             _dangerCoroutine = StartCoroutine(ShowAndDisableAfter(_danger));
         }
 
@@ -35,10 +37,14 @@ namespace Services
                 StopCoroutine(_dangerCoroutine);
         }
 
+        private void DisableAll()
+        {
+            _danger.enabled = false;
+            _correct.enabled = false;
+        }
+
         private static IEnumerator ShowAndDisableAfter(Image image)
         {
-            image.enabled = false;
-            
             yield return new WaitForSeconds(0.1f);
             
             image.enabled = true;

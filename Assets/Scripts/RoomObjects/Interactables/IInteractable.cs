@@ -1,6 +1,4 @@
-﻿using Services;
-
-namespace RoomObjects.Interactables
+﻿namespace RoomObjects.Interactables
 {
     public interface IInteractable
     {
