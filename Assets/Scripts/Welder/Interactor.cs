@@ -10,7 +10,7 @@ namespace Welder
         [SerializeField] private float _interactionDistance;
         [SerializeField] private float _checkTimeInterval;
 
-        [SerializeField] private Choices _choices;
+        [SerializeField] private ChoicesManager _choicesManager;
 
         private float _timePassed;
         
@@ -57,7 +57,7 @@ namespace Welder
                 }
             }
 
-            _choices.HideChoices();
+            _choicesManager.HideChoices();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using RoomObjects.Interactables;
+﻿using RoomObjects.Interactables;
 using UnityEngine;
 using UnityEngine.UI;
 using Welder;
@@ -8,7 +6,7 @@ using Welder;
 namespace Services
 {
     [RequireComponent(typeof(ActionOutcome))]
-    public class EquipableChoices : MonoBehaviour, IChoicesShower
+    public class EquipableShower : MonoBehaviour
     {
         [SerializeField] private Equipment _equipment;
 
@@ -22,8 +20,6 @@ namespace Services
         private Equipable _equipable;
         private bool _showing;
         private bool _equipmentChecked;
-        
-        private Coroutine _hideAfterCoroutine;
 
         private void Awake()
         {
@@ -53,15 +49,8 @@ namespace Services
             }
         }
 
-        public void Show(IInteractable interactable)
+        public void Show(Equipable equipable)
         {
-            var equipable = interactable as Equipable;
-            
-            if (equipable == null)
-            {
-                throw new ArgumentException(nameof(interactable));
-            }
-
             if (_showing && _equipable == equipable)
             {
                 return;
@@ -72,40 +61,28 @@ namespace Services
             
             _equipableChoices.gameObject.SetActive(true);
             
-            ShowEquipmentChoices();
+            ShowEquipableChoices();
         }
 
         private void Hide()
         {
+            _showing = false;
             _equipable = null;
             
             _equipableChoices.gameObject.SetActive(false);
             
             _checkEquipment.onClick.RemoveListener(CheckEquipment);
             _use.onClick.RemoveListener(Use);
-
-            _hideAfterCoroutine = StartCoroutine(HideAfter());
         }
 
-        private void ShowEquipmentChoices()
+        private void ShowEquipableChoices()
         {
-            if (_hideAfterCoroutine != null)
-            {
-                StopCoroutine(_hideAfterCoroutine);
-            }
-
             _checkEquipment.interactable = !_equipable.IsChecked;
 
             _use.interactable = true;
             
             _checkEquipment.onClick.AddListener(CheckEquipment);
             _use.onClick.AddListener(Use);
-        }
-
-        private IEnumerator HideAfter()
-        {
-            yield return new WaitForSeconds(0.3f);
-            _showing = false;
         }
 
         private void CheckEquipment()

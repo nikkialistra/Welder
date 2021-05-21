@@ -211,7 +211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interactionDistance: 3
   _checkTimeInterval: 0.3
-  _choices: {fileID: 851097920}
+  _choicesManager: {fileID: 851097920}
 --- !u!114 &112604882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0128334d6c21403db39c8ce6f2fe997d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weldingHandlePosition: {fileID: 229068083}
 --- !u!1 &141894492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1961,6 +1962,57 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 763302495}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &791253486
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 791253488}
+  - component: {fileID: 791253487}
+  m_Layer: 0
+  m_Name: Rope
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &791253487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791253486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af14885031724ed9add8da45d5b4721b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ropePartPrefab: {fileID: 1648770186572484602, guid: 1278cd7f643e76741ba608dffad44db5,
+    type: 3}
+  _length: 5
+  _lastPosition: {fileID: 1493103178}
+  _partDistance: 0.21
+  _spawn: 1
+  _snapFirst: 1
+  _snapLast: 1
+--- !u!4 &791253488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791253486}
+  m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 1.1340003, y: -0.020999998, z: -0.803}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2109520917}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!1001 &838141772
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2135,6 +2187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemHolder: {fileID: 112604883}
+  _equipment: {fileID: 112604882}
   _useableChoices: {fileID: 1370813259}
   _use: {fileID: 747160352}
 --- !u!1 &963194225
@@ -2463,8 +2516,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc6e028f276411a8cc8742a7a0e3419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _choices: {fileID: 851097920}
-  _useableChoices: {fileID: 851097921}
+  _useableType: 0
+  _choicesManager: {fileID: 851097920}
+  _useableShower: {fileID: 851097921}
 --- !u!135 &1029959356
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3578,9 +3632,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f154145a28c04dbfb1477dad0e54bf02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _choices: {fileID: 851097920}
-  _equipableChoices: {fileID: 851097918}
-  _equipmentTypes: 1
+  _choicesManager: {fileID: 851097920}
+  _equipableShower: {fileID: 851097918}
+  _equipableTypes: 1
 --- !u!135 &1825387728
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3612,9 +3666,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f154145a28c04dbfb1477dad0e54bf02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _choices: {fileID: 851097920}
-  _equipableChoices: {fileID: 851097918}
-  _equipmentTypes: 0
+  _choicesManager: {fileID: 851097920}
+  _equipableShower: {fileID: 851097918}
+  _equipableTypes: 0
 --- !u!4 &1828432494 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7950220217288176335, guid: 177edb9fd1a38334aac03118393435fb,
@@ -4100,6 +4154,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1493103178}
+  - {fileID: 791253488}
   m_Father: {fileID: 304858073}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

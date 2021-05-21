@@ -9,17 +9,13 @@ namespace RoomObjects.Interactables
 
         [SerializeField] private UseableTypes _useableType;
         
-        [SerializeField] private Choices _choices;
-        [SerializeField] private UseableChoices _useableChoices;
+        [SerializeField] private ChoicesManager _choicesManager;
+        [SerializeField] private UseableShower _useableShower;
 
         public void ShowChoices()
         {
-            _choices.ShowChoices(_useableChoices, this);
-        }
-
-        public void Interact()
-        {
-            Destroy(gameObject);
+            _choicesManager.ShowChoices();
+            _useableShower.Show(this);
         }
     }
 }

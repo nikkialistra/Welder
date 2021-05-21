@@ -3,17 +3,13 @@ using UnityEngine;
 
 namespace Services
 {
-    public class Choices : MonoBehaviour
+    public class ChoicesManager : MonoBehaviour
     {
         [SerializeField] private RectTransform _choices;
         
-        private ActionOutcome _actionOutcome;
-
-        public void ShowChoices(IChoicesShower choicesShower, IInteractable interactable)
+        public void ShowChoices()
         {
             _choices.gameObject.SetActive(true);
-
-            choicesShower.Show(interactable);
         }
         
         public void HideChoices()

@@ -45,13 +45,13 @@ namespace Welder
 
         public void Equip(Equipable equipable)
         {
-            switch (equipable.EquipmentTypes)
+            switch (equipable.EquipableTypes)
             {
-                case EquipmentTypes.Mask:
+                case EquipableTypes.Mask:
                     _mask = equipable;
                     ShowMask();
                     break;
-                case EquipmentTypes.Gloves:
+                case EquipableTypes.Gloves:
                     _gloves = equipable;
                     ShowGloves();
                     break;
@@ -59,7 +59,7 @@ namespace Welder
                     throw new ArgumentOutOfRangeException();
             }
 
-            equipable.Interact();
+            equipable.Hide();
         }
 
         private void ShowMask()

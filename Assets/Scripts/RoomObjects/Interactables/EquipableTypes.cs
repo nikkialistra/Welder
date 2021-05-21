@@ -1,6 +1,6 @@
 ﻿namespace RoomObjects.Interactables
 {
-    public enum EquipmentTypes
+    public enum EquipableTypes
     {
         Mask,
         Gloves

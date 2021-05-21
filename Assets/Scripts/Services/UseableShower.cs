@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections;
-using RoomObjects.Interactables;
+﻿using RoomObjects.Interactables;
 using UnityEngine;
 using UnityEngine.UI;
 using Welder;
 
 namespace Services
 {
-    public class UseableChoices : MonoBehaviour, IChoicesShower
+    public class UseableShower : MonoBehaviour
     {
         [SerializeField] private ItemHolder _itemHolder;
+        [SerializeField] private Equipment _equipment;
 
         [SerializeField] private RectTransform _useableChoices;
         
@@ -17,8 +16,6 @@ namespace Services
 
         private Useable _useable;
         private bool _showing;
-
-        private Coroutine _hideAfterCoroutine;
 
         private void Update()
         {
@@ -38,13 +35,13 @@ namespace Services
             }
         }
 
-        public void Show(IInteractable interactable)
+        public void Show(Useable useable)
         {
-            var useable = interactable as Useable;
-
-            if (useable == null)
+            if (!_equipment.MaskEquiped || !_equipment.GlovesEquiped)
             {
-                throw new ArgumentException(nameof(interactable));
+                Debug.Log(!_equipment.MaskEquiped);
+                Debug.Log(!_equipment.GlovesEquiped);
+                return;
             }
 
             if (_showing && _useable == useable)
@@ -57,36 +54,24 @@ namespace Services
             
             _useableChoices.gameObject.SetActive(true);
             
-            ShowEquipmentChoices();
+            ShowUseableChoices();
         }
 
         private void Hide()
         {
+            _showing = false;
             _useable = null;
             
             _useableChoices.gameObject.SetActive(false);
-            
-            _use.onClick.RemoveListener(Use);
 
-            _hideAfterCoroutine = StartCoroutine(HideAfter());
+            _use.onClick.RemoveListener(Use);
         }
 
-        private void ShowEquipmentChoices()
+        private void ShowUseableChoices()
         {
-            if (_hideAfterCoroutine != null)
-            {
-                StopCoroutine(_hideAfterCoroutine);
-            }
-
             _use.interactable = true;
             
             _use.onClick.AddListener(Use);
-        }
-
-        private IEnumerator HideAfter()
-        {
-            yield return new WaitForSeconds(0.3f);
-            _showing = false;
         }
 
         private void Use()
