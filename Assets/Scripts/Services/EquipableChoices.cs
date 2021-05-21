@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using RoomObjects.Interactables;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,11 +8,11 @@ using Welder;
 namespace Services
 {
     [RequireComponent(typeof(ActionOutcome))]
-    public class EquipableChoices : MonoBehaviour
+    public class EquipableChoices : MonoBehaviour, IChoicesShower
     {
         [SerializeField] private Equipment _equipment;
 
-        [SerializeField] private RectTransform _choices;
+        [SerializeField] private RectTransform _equipableChoices;
 
         [SerializeField] private Button _checkEquipment;
         [SerializeField] private Button _use;
@@ -52,8 +53,15 @@ namespace Services
             }
         }
 
-        public void ShowChoices(Equipable equipable)
+        public void Show(IInteractable interactable)
         {
+            var equipable = interactable as Equipable;
+            
+            if (equipable == null)
+            {
+                throw new ArgumentException(nameof(interactable));
+            }
+
             if (_showing && _equipable == equipable)
             {
                 return;
@@ -62,7 +70,21 @@ namespace Services
             _showing = true;
             _equipable = equipable;
             
+            _equipableChoices.gameObject.SetActive(true);
+            
             ShowEquipmentChoices();
+        }
+
+        private void Hide()
+        {
+            _equipable = null;
+            
+            _equipableChoices.gameObject.SetActive(false);
+            
+            _checkEquipment.onClick.RemoveListener(CheckEquipment);
+            _use.onClick.RemoveListener(Use);
+
+            _hideAfterCoroutine = StartCoroutine(HideAfter());
         }
 
         private void ShowEquipmentChoices()
@@ -72,8 +94,6 @@ namespace Services
                 StopCoroutine(_hideAfterCoroutine);
             }
 
-            _choices.gameObject.SetActive(true);
-
             _checkEquipment.interactable = !_equipable.IsChecked;
 
             _use.interactable = true;
@@ -82,21 +102,9 @@ namespace Services
             _use.onClick.AddListener(Use);
         }
 
-        private void HideEquipmentChoices()
-        {
-            _equipable = null;
-            
-            _checkEquipment.onClick.RemoveListener(CheckEquipment);
-            _use.onClick.RemoveListener(Use);
-            _use.onClick.RemoveAllListeners();
-
-            _hideAfterCoroutine = StartCoroutine(HideAfter());
-        }
-
         private IEnumerator HideAfter()
         {
             yield return new WaitForSeconds(0.3f);
-            _choices.gameObject.SetActive(false);
             _showing = false;
         }
 
@@ -125,7 +133,7 @@ namespace Services
 
             }
 
-            HideEquipmentChoices();
+            Hide();
         }
     }
 }

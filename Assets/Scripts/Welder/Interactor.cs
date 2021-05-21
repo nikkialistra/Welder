@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using RoomObjects.Interactables;
+using Services;
 using UnityEngine;
 
 namespace Welder
@@ -9,7 +10,7 @@ namespace Welder
         [SerializeField] private float _interactionDistance;
         [SerializeField] private float _checkTimeInterval;
 
-        [SerializeField] private RectTransform _equipableChoices;
+        [SerializeField] private Choices _choices;
 
         private float _timePassed;
         
@@ -56,12 +57,7 @@ namespace Welder
                 }
             }
 
-            DeactivateAllChoices();
-        }
-
-        private void DeactivateAllChoices()
-        {
-            _equipableChoices.gameObject.SetActive(false);
+            _choices.HideChoices();
         }
     }
 }

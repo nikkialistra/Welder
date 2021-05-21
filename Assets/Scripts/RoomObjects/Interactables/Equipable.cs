@@ -9,13 +9,14 @@ namespace RoomObjects.Interactables
 
         public bool IsChecked { get; private set; }
 
-        [SerializeField] private EquipableChoices _equipableChoices;
+        [SerializeField] private Choices _choices;
         
+        [SerializeField] private EquipableChoices _equipableChoices;
         [SerializeField] private EquipmentTypes _equipmentTypes;
 
         public void ShowChoices()
         {
-            _equipableChoices.ShowChoices(this);
+            _choices.ShowChoices(_equipableChoices, this);
         }
 
         public void Interact()

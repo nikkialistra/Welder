@@ -33,10 +33,10 @@ namespace Welder
 
         [SerializeField] private RectTransform _weldingMask;
 
-        [SerializeField] private MeshFilter _leftHand;
-        [SerializeField] private MeshFilter _rightHand;
+        [SerializeField] private Transform _handWithoutGloves;
         
-        [SerializeField] private Mesh _handInGlove;
+        [SerializeField] private GameObject _handWithGlovesPrefab;
+        [SerializeField] private Transform _handPosition;
 
         private Equipable _mask;
         private Equipable _gloves;
@@ -69,8 +69,9 @@ namespace Welder
 
         private void ShowGloves()
         {
-            // _leftHand.mesh = _handInGlove;
-            // _rightHand.mesh = _handInGlove;
+            Destroy(_handWithoutGloves.gameObject);
+            
+            Instantiate(_handWithGlovesPrefab, _handPosition);
         }
     }
 }
