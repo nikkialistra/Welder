@@ -1,4 +1,5 @@
-﻿using RoomObjects.Interactables;
+﻿using System;
+using RoomObjects.Interactables;
 using UnityEngine;
 using UnityEngine.UI;
 using Welder;
@@ -7,8 +8,9 @@ namespace Services
 {
     public class UseableShower : MonoBehaviour
     {
-        [SerializeField] private ItemHolder _itemHolder;
+        [SerializeField] private ObjectUtilizer _objectUtilizer;
         [SerializeField] private Equipment _equipment;
+        [SerializeField] private WelderAnimator _welderAnimator;
 
         [SerializeField] private RectTransform _useableChoices;
         
@@ -37,9 +39,22 @@ namespace Services
 
         public void Show(Useable useable)
         {
-            if (!_equipment.MaskEquiped || !_equipment.GlovesEquiped)
+            switch (useable.UseableType)
             {
-                return;
+                case UseableTypes.WeldingHandle:
+                    if (!CheckRequirementsForWeldingHandle())
+                    {
+                        return;
+                    }
+                    break;
+                case UseableTypes.Barrel:
+                    if (!CheckRequirementsForBarrel())
+                    {
+                        return;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             if (_showing && _useable == useable)
@@ -53,6 +68,26 @@ namespace Services
             _useableChoices.gameObject.SetActive(true);
             
             ShowUseableChoices();
+        }
+
+        private bool CheckRequirementsForWeldingHandle()
+        {
+            if (!_equipment.MaskEquiped || !_equipment.GlovesEquiped)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckRequirementsForBarrel()
+        {
+            if (!_objectUtilizer.HoldingWeldingHandle || _welderAnimator.IsWelding)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void Hide()
@@ -76,7 +111,7 @@ namespace Services
         {
             _use.interactable = false;
 
-            _itemHolder.Take(_useable);
+            _objectUtilizer.Use(_useable);
 
             Hide();
         }

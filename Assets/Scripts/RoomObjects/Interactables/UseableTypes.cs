@@ -3,6 +3,6 @@
     public enum UseableTypes
     {
         WeldingHandle,
-        Box
+        Barrel
     }
 }

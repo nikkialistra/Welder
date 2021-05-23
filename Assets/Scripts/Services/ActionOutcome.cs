@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,24 +9,26 @@ namespace Services
     {
         [SerializeField] private Image _danger;
         [SerializeField] private Image _correct;
-        
+
+        [SerializeField] private TextMeshProUGUI _text;
+
         private Coroutine _correctCoroutine;
         private Coroutine _dangerCoroutine;
 
-        public void ShowCorrect()
+        public void ShowCorrect(string message = "")
         {
             StopCoroutines();
 
             DisableAll();
-            _correctCoroutine = StartCoroutine(ShowAndDisableAfter(_correct));
+            _correctCoroutine = StartCoroutine(ShowAndDisableAfter(_correct, message));
         }
 
-        public void ShowDanger()
+        public void ShowDanger(string message = "")
         {
             StopCoroutines();
 
             DisableAll();
-            _dangerCoroutine = StartCoroutine(ShowAndDisableAfter(_danger));
+            _dangerCoroutine = StartCoroutine(ShowAndDisableAfter(_danger, message));
         }
 
         private void StopCoroutines()
@@ -43,15 +46,21 @@ namespace Services
             _correct.enabled = false;
         }
 
-        private static IEnumerator ShowAndDisableAfter(Image image)
+        private IEnumerator ShowAndDisableAfter(Image image, string message)
         {
             yield return new WaitForSeconds(0.1f);
             
             image.enabled = true;
+            if (message != "")
+            {
+                _text.text = message;
+                _text.enabled = true;
+            }
             
             yield return new WaitForSeconds(1.5f);
 
             image.enabled = false;
+            _text.enabled = false;
         }
     }
 }

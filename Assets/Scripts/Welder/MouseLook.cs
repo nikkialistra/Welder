@@ -4,6 +4,8 @@ namespace Welder
 {
     public class MouseLook : MonoBehaviour
     {
+        public bool CanRotate { get; set; } = true;
+        
         [SerializeField] private Transform _welder;
         
         [SerializeField] private float _mouseSensitivity = 100f;
@@ -21,6 +23,11 @@ namespace Welder
 
         private void Update()
         {
+            if (!CanRotate)
+            {
+                return;
+            }
+            
             var mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
             _currentMouseDelta = Vector2.SmoothDamp(_currentMouseDelta, mouseDelta, ref _currentMouseDeltaVelocity, _mouseSmoothTime);

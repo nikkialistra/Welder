@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using RoomObjects.Interactables;
+﻿using RoomObjects.Interactables;
 using Services;
 using UnityEngine;
 
@@ -8,6 +7,7 @@ namespace Welder
     public class Interactor : MonoBehaviour
     {
         [SerializeField] private float _interactionDistance;
+        [SerializeField] private LayerMask _layerMask;
         [SerializeField] private float _checkTimeInterval;
 
         [SerializeField] private ChoicesManager _choicesManager;
@@ -48,7 +48,7 @@ namespace Welder
         {
             var ray = _camera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
 
-            if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance))
+            if (Physics.Raycast(ray, out var hit, _interactionDistance, _layerMask))
             {
                 if (hit.transform.TryGetComponent(out IInteractable interactable))
                 {

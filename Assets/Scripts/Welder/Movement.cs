@@ -5,6 +5,8 @@ namespace Welder
     [RequireComponent(typeof(CharacterController))]
     public class Movement : MonoBehaviour
     {
+        public bool CanMove { get; set; } = true;
+        
         [SerializeField] private float _walkSpeed = 12f;
         [SerializeField] private float _smoothTime = 0.03f;
         
@@ -35,6 +37,11 @@ namespace Welder
 
         private void UpdateMoving()
         {
+            if (!CanMove)
+            {
+                return;
+            }
+            
             var targetDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
             _currentDirection = Vector2.SmoothDamp(_currentDirection, targetDirection, ref _currentDirectionVelocity, _smoothTime);
