@@ -39,8 +39,6 @@ namespace Services
         {
             if (!_equipment.MaskEquiped || !_equipment.GlovesEquiped)
             {
-                Debug.Log(!_equipment.MaskEquiped);
-                Debug.Log(!_equipment.GlovesEquiped);
                 return;
             }
 
