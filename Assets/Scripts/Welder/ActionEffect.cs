@@ -2,6 +2,7 @@
 using TMPro;
 using UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Welder
 {
@@ -13,6 +14,10 @@ namespace Welder
 
         [SerializeField] private BlindnessEffect _blindnessEffect;
         [SerializeField] private BurningEffect _burningEffect;
+
+        [SerializeField] private TextMeshProUGUI _restartText;
+        
+        private bool shouldRestart;
 
         private WelderAnimator _welderAnimator;
         private Equipment _equipment;
@@ -28,6 +33,19 @@ namespace Welder
             _welderAnimator.Welding += OnWelding;
         }
 
+        private void Update()
+        {
+            if (!shouldRestart)
+            {
+                return;
+            }
+            
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene("FirstScene");
+            }
+        }
+
         private void OnWelding()
         {
             if (_equipment.MaskChecked && _equipment.GlovesChecked)
@@ -37,7 +55,6 @@ namespace Welder
             else
             {
                 _actionOutcome.ShowDanger("Неисправные средства защиты приводят к повреждению здоровья.");
-
                 ShowOutcomeEffects();
             }
         }
@@ -53,6 +70,9 @@ namespace Welder
             {
                 _burningEffect.Show();
             }
+
+            _restartText.enabled = true;
+            shouldRestart = true;
         }
     }
 }
