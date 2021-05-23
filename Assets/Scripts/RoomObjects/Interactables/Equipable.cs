@@ -1,4 +1,4 @@
-﻿using Services;
+﻿using UI;
 using UnityEngine;
 
 namespace RoomObjects.Interactables
@@ -16,7 +16,7 @@ namespace RoomObjects.Interactables
 
         public void ShowChoices()
         {
-            _choicesManager.ShowChoices();
+            _choicesManager.ShowEmptyChoices();
             _equipableShower.Show(this);
         }
 

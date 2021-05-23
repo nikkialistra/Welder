@@ -1,4 +1,6 @@
-﻿using Services;
+﻿using Effects;
+using TMPro;
+using UI;
 using UnityEngine;
 
 namespace Welder
@@ -8,6 +10,9 @@ namespace Welder
     public class ActionEffect : MonoBehaviour
     {
         [SerializeField] private ActionOutcome _actionOutcome;
+
+        [SerializeField] private BlindnessEffect _blindnessEffect;
+        [SerializeField] private BurningEffect _burningEffect;
 
         private WelderAnimator _welderAnimator;
         private Equipment _equipment;
@@ -25,13 +30,28 @@ namespace Welder
 
         private void OnWelding()
         {
-            if (_equipment.MaskChecked && _equipment.GlovesEquiped)
+            if (_equipment.MaskChecked && _equipment.GlovesChecked)
             {
                 _actionOutcome.ShowCorrect();
             }
             else
             {
-                _actionOutcome.ShowDanger("Неисправные средства защиты приводят к повреждению здоровья (ожог сетчатки глаз или ожог кожи)");
+                _actionOutcome.ShowDanger("Неисправные средства защиты приводят к повреждению здоровья.");
+
+                ShowOutcomeEffects();
+            }
+        }
+
+        private void ShowOutcomeEffects()
+        {
+            if (!_equipment.MaskChecked)
+            {
+                _blindnessEffect.Show();
+            }
+
+            if (!_equipment.GlovesChecked)
+            {
+                _burningEffect.Show();
             }
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Welder;
 
-namespace Services
+namespace UI
 {
     public class UseableShower : MonoBehaviour
     {
@@ -57,6 +57,8 @@ namespace Services
                     throw new ArgumentOutOfRangeException();
             }
 
+            _useableChoices.gameObject.SetActive(true);
+            
             if (_showing && _useable == useable)
             {
                 return;
@@ -64,9 +66,7 @@ namespace Services
 
             _showing = true;
             _useable = useable;
-            
-            _useableChoices.gameObject.SetActive(true);
-            
+
             ShowUseableChoices();
         }
 

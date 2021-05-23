@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Welder;
 
-namespace Services
+namespace UI
 {
     [RequireComponent(typeof(ActionOutcome))]
     public class EquipableShower : MonoBehaviour
@@ -51,6 +51,8 @@ namespace Services
 
         public void Show(Equipable equipable)
         {
+            _equipableChoices.gameObject.SetActive(true);
+            
             if (_showing && _equipable == equipable)
             {
                 return;
@@ -58,9 +60,8 @@ namespace Services
 
             _showing = true;
             _equipable = equipable;
-            
-            _equipableChoices.gameObject.SetActive(true);
-            
+
+
             ShowEquipableChoices();
         }
 

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Services
+namespace UI
 {
     public class ActionOutcome : MonoBehaviour
     {
@@ -55,6 +55,8 @@ namespace Services
             {
                 _text.text = message;
                 _text.enabled = true;
+                
+                yield return new WaitForSeconds(1.5f);
             }
             
             yield return new WaitForSeconds(1.5f);
