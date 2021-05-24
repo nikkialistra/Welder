@@ -38,10 +38,28 @@ namespace Welder
         [SerializeField] private GameObject _handWithGlovesPrefab;
         [SerializeField] private Transform _handPosition;
 
-        private Equipable _mask;
-        private Equipable _gloves;
+        [SerializeField] private Equipable _mask;
+        [SerializeField] private Equipable _gloves;
         
         private bool _wasChecked;
+
+        private void Start()
+        {
+            EquipStartupEquipables();
+        }
+
+        private void EquipStartupEquipables()
+        {
+            if (_mask != null)
+            {
+                ShowMask();
+            }
+
+            if (_gloves != null)
+            {
+                ShowGloves();
+            }
+        }
 
         public void Equip(Equipable equipable)
         {

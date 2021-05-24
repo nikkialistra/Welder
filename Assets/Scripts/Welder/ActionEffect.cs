@@ -16,8 +16,10 @@ namespace Welder
         [SerializeField] private BurningEffect _burningEffect;
 
         [SerializeField] private TextMeshProUGUI _restartText;
-        
-        private bool shouldRestart;
+        [SerializeField] private TextMeshProUGUI _continueText;
+
+        private bool _shouldRestart;
+        private bool _shouldContinue;
 
         private WelderAnimator _welderAnimator;
         private Equipment _equipment;
@@ -35,14 +37,19 @@ namespace Welder
 
         private void Update()
         {
-            if (!shouldRestart)
-            {
-                return;
-            }
-            
-            if (Input.GetKeyDown(KeyCode.R))
+            LoadSceneIfNeeded();
+        }
+
+        private void LoadSceneIfNeeded()
+        {
+            if (_shouldRestart && Input.GetKeyDown(KeyCode.R))
             {
                 SceneManager.LoadScene("FirstScene");
+            }
+
+            if (_shouldContinue && Input.GetKeyDown(KeyCode.T))
+            {
+                SceneManager.LoadScene("SecondScene");
             }
         }
 
@@ -51,6 +58,9 @@ namespace Welder
             if (_equipment.MaskChecked && _equipment.GlovesChecked)
             {
                 _actionOutcome.ShowCorrect();
+
+                _continueText.enabled = true;
+                _shouldContinue = true;
             }
             else
             {
@@ -72,7 +82,7 @@ namespace Welder
             }
 
             _restartText.enabled = true;
-            shouldRestart = true;
+            _shouldRestart = true;
         }
     }
 }
