@@ -31,17 +31,17 @@ namespace Welder
 
         private void Update()
         {
+            if (!CanMove)
+            {
+                return;
+            }
+            
             UpdateFalling();
             UpdateMoving();
         }
 
         private void UpdateMoving()
         {
-            if (!CanMove)
-            {
-                return;
-            }
-            
             var targetDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
             _currentDirection = Vector2.SmoothDamp(_currentDirection, targetDirection, ref _currentDirectionVelocity, _smoothTime);
