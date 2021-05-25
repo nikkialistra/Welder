@@ -90,23 +90,6 @@ namespace UI
             return true;
         }
 
-        private void Hide()
-        {
-            _showing = false;
-            _useable = null;
-            
-            _useableChoices.gameObject.SetActive(false);
-
-            _use.onClick.RemoveListener(Use);
-        }
-
-        private void ShowUseableChoices()
-        {
-            _use.interactable = true;
-            
-            _use.onClick.AddListener(Use);
-        }
-
         private void Use()
         {
             _use.interactable = false;
@@ -114,6 +97,19 @@ namespace UI
             _objectUtilizer.Use(_useable);
 
             Hide();
+        }
+
+        private void Hide()
+        {
+            _showing = false;
+            _useable = null;
+            
+            _useableChoices.gameObject.SetActive(false);
+        }
+
+        private void ShowUseableChoices()
+        {
+            _use.interactable = true;
         }
     }
 }

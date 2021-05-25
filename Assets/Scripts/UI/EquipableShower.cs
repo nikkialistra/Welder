@@ -65,35 +65,6 @@ namespace UI
             ShowEquipableChoices();
         }
 
-        private void Hide()
-        {
-            _showing = false;
-            _equipable = null;
-            
-            _equipableChoices.gameObject.SetActive(false);
-            
-            _checkEquipment.onClick.RemoveListener(CheckEquipment);
-            _use.onClick.RemoveListener(Use);
-        }
-
-        private void ShowEquipableChoices()
-        {
-            _checkEquipment.interactable = !_equipable.IsChecked;
-
-            _use.interactable = true;
-            
-            _checkEquipment.onClick.AddListener(CheckEquipment);
-            _use.onClick.AddListener(Use);
-        }
-
-        private void CheckEquipment()
-        {
-            _checkEquipment.interactable = false;
-            _equipable.Check();
-            
-            _actionOutcome.ShowCorrect();
-        }
-
         private void Use()
         {
             _checkEquipment.interactable = false;
@@ -112,6 +83,29 @@ namespace UI
             }
 
             Hide();
+        }
+
+        private void Hide()
+        {
+            _showing = false;
+            _equipable = null;
+            
+            _equipableChoices.gameObject.SetActive(false);
+        }
+
+        private void ShowEquipableChoices()
+        {
+            _checkEquipment.interactable = !_equipable.IsChecked;
+
+            _use.interactable = true;
+        }
+
+        private void CheckEquipment()
+        {
+            _checkEquipment.interactable = false;
+            _equipable.Check();
+            
+            _actionOutcome.ShowCorrect();
         }
     }
 }
