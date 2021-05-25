@@ -15,7 +15,7 @@ namespace RoomObjects.Interactables
         public void ShowChoices()
         {
             _choicesManager.ShowEmptyChoices();
-            _preparableShower.Show(this);
+            _preparableShower.Show();
         }
     }
 }

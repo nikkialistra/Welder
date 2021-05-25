@@ -10,8 +10,10 @@ namespace Welder
         [SerializeField] private float _walkSpeed = 12f;
         [SerializeField] private float _smoothTime = 0.03f;
         
+        [Space]
         [SerializeField] private float _gravity = 15;
 
+        [Space]
         [SerializeField] private Transform _groundCheck;
         [SerializeField] private float _groundDistance = 0.3f;
         [SerializeField] private LayerMask _groundMask;

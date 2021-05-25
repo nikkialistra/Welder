@@ -36,7 +36,7 @@ namespace UI
             CheckKeyPresses();
         }
 
-        public void Show(Preparable preparable)
+        public void Show()
         {
             _preparableChoices.gameObject.SetActive(true);
             
@@ -83,8 +83,11 @@ namespace UI
         private void StartWorking()
         {
             _startWorking.interactable = false;
+
+            var boxesNotRemoved = _removeBoxes.IsInteractable();
+            var floorNotWiped = _wipeFloor.IsInteractable();
             
-            _welderMotionAnimator.StartWorking();
+            _welderMotionAnimator.StartWorking(boxesNotRemoved, floorNotWiped);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Welder
         [SerializeField] private LayerMask _layerMask;
         [SerializeField] private float _checkTimeInterval;
 
+        [Space]
         [SerializeField] private ChoicesManager _choicesManager;
 
         private float _timePassed;

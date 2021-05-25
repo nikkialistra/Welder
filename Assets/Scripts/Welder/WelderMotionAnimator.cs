@@ -11,13 +11,25 @@ namespace Welder
     {
         [SerializeField] private Transform _tableWorkingPoint;
         [SerializeField] private Transform _tableLookingPoint;
+        [SerializeField] private Transform _reactionLookingPoint;
+
+        [Space]
+        [SerializeField] private float _timeToFallOnFloor;
+        [SerializeField] private float _fallOnFloorAngle;
+        [SerializeField] private float _fallOnFloorHeight;
         
+        [Space]
+        [SerializeField] private float _timeToFallOnBoxes;
+        [SerializeField] private float _fallOnBoxesAngle;
+
         private NavMeshAgent _navMeshAgent;
         private CharacterController _characterController;
         private Movement _movement;
-        
-        private Coroutine _moveToTableCoroutine;
-        private Coroutine _lookOnTableCoroutine;
+
+        private bool _boxesNotRemoved;
+        private bool _floorNotWiped;
+
+        private bool _motionActivated;
 
         private void Awake()
         {
@@ -26,19 +38,19 @@ namespace Welder
             _movement = GetComponent<Movement>();
         }
 
-        public void StartWorking()
+        public void StartWorking(bool boxesNotRemoved, bool floorNotWiped)
         {
-            if (_moveToTableCoroutine != null)
+            if (_motionActivated)
             {
-                StopCoroutine(_moveToTableCoroutine);
-            }
-
-            if (_lookOnTableCoroutine != null)
-            {
-                StopCoroutine(_lookOnTableCoroutine);
+                return;
             }
             
-            _moveToTableCoroutine = StartCoroutine(MoveToTableWorkingPoint());
+            _motionActivated = true;
+            
+            _boxesNotRemoved = boxesNotRemoved;
+            _floorNotWiped = floorNotWiped;
+
+            StartCoroutine(MoveToTableWorkingPoint());
         }
 
         private IEnumerator MoveToTableWorkingPoint()
@@ -46,8 +58,7 @@ namespace Welder
             DisableControl();
 
             _navMeshAgent.SetDestination(_tableWorkingPoint.position);
-            _navMeshAgent.isStopped = false;
-            
+
             // Give time to accelerate
             yield return new WaitForSeconds(0.3f);
 
@@ -55,19 +66,30 @@ namespace Welder
             {
                 yield return null;
             }
-
-            _navMeshAgent.isStopped = true;
             
-            EnableControl();
+            _navMeshAgent.enabled = false;
+            
+            yield return StartCoroutine(LookAt(_tableLookingPoint.position));
+            
+            yield return new WaitForSeconds(1f);
 
-            _lookOnTableCoroutine = StartCoroutine(LookAt(_tableLookingPoint.position));
+            yield return StartCoroutine(LookAt(_reactionLookingPoint.position));
+
+            StartCoroutine(TryFallOnItems());
         }
-        
+
+        private void DisableControl()
+        {
+            _characterController.enabled = false;
+            _movement.CanMove = false;
+        }
+
         private IEnumerator LookAt(Vector3 point)
         {
             var rotationDirection = point - transform.position;
             rotationDirection.y = 0;
             var rotation = Quaternion.LookRotation(rotationDirection);
+
 
             while (QuaternionAreNotSame(transform.rotation, rotation))
             {
@@ -79,16 +101,65 @@ namespace Welder
 
         private bool QuaternionAreNotSame(Quaternion first, Quaternion second) => Mathf.Abs(Quaternion.Dot(first,second)) < 0.99f;
 
-        private void DisableControl()
+        private IEnumerator TryFallOnItems()
         {
-            _characterController.enabled = false;
-            _movement.CanMove = false;
+            if (_floorNotWiped)
+            {
+                yield return StartCoroutine(SlipOnFloor());
+                yield return StartCoroutine(GetUp());
+            }
+
+            if (_boxesNotRemoved)
+            {
+                yield return StartCoroutine(FallOnBoxes());
+            }
         }
 
-        private void EnableControl()
+        private IEnumerator SlipOnFloor()
         {
-            _characterController.enabled = true;
-            _movement.CanMove = true;
+            var time = 0f;
+            var beginPosition = transform.position;
+
+            while (time <= _timeToFallOnFloor)
+            {
+                var fraction = time / _timeToFallOnFloor;
+
+                ChangeSlipRotation(fraction);
+                ChangeSlipPosition(beginPosition, fraction);
+
+                time += Time.deltaTime;
+                Debug.Log(transform.rotation.eulerAngles);
+
+                yield return null;
+            }
+            
+            Debug.Log(transform.rotation.eulerAngles);
+        }
+
+        private void ChangeSlipPosition(Vector3 beginPosition, float fraction)
+        {
+            var position = beginPosition;
+            position.y -= _fallOnFloorHeight * fraction;
+            
+            transform.position = position;
+        }
+
+        private void ChangeSlipRotation(float fraction)
+        {
+            var rotation = transform.rotation.eulerAngles;
+            rotation.z = _fallOnFloorAngle * fraction;
+            
+            transform.eulerAngles = rotation;
+        }
+
+        private IEnumerator GetUp()
+        {
+            yield return null;
+        }
+
+        private IEnumerator FallOnBoxes()
+        {
+            yield return null;
         }
     }
 }

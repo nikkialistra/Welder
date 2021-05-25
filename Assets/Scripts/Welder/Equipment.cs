@@ -38,6 +38,7 @@ namespace Welder
         [SerializeField] private GameObject _handWithGlovesPrefab;
         [SerializeField] private Transform _handPosition;
 
+        [Space]
         [SerializeField] private Equipable _mask;
         [SerializeField] private Equipable _gloves;
         

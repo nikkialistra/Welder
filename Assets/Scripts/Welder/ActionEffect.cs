@@ -12,9 +12,11 @@ namespace Welder
     {
         [SerializeField] private ActionOutcome _actionOutcome;
 
+        [Space]
         [SerializeField] private BlindnessEffect _blindnessEffect;
         [SerializeField] private BurningEffect _burningEffect;
 
+        [Space]
         [SerializeField] private TextMeshProUGUI _restartText;
         [SerializeField] private TextMeshProUGUI _continueText;
 
