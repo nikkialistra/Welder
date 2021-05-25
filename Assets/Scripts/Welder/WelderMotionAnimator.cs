@@ -7,6 +7,7 @@ namespace Welder
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(Movement))]
+    [RequireComponent(typeof(PreparationsEffect))]
     public class WelderMotionAnimator : MonoBehaviour
     {
         [SerializeField] private Transform _tableWorkingPoint;
@@ -20,7 +21,11 @@ namespace Welder
         
         [Space]
         [SerializeField] private float _timeToFallOnBoxes;
-        [SerializeField] private float _fallOnBoxesAngle;
+        [SerializeField] private float _fallOnBoxesHeight;
+        [SerializeField] private float _fallOnBoxesDistance;
+        
+        [Space] 
+        [SerializeField] private PreparationsEffect _preparationsEffect;
 
         private NavMeshAgent _navMeshAgent;
         private CharacterController _characterController;
@@ -36,6 +41,7 @@ namespace Welder
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _characterController = GetComponent<CharacterController>();
             _movement = GetComponent<Movement>();
+            _preparationsEffect = GetComponent<PreparationsEffect>();
         }
 
         public void StartWorking(bool boxesNotRemoved, bool floorNotWiped)
@@ -103,20 +109,33 @@ namespace Welder
 
         private IEnumerator TryFallOnItems()
         {
+            var success = true;
+            
             if (_floorNotWiped)
             {
+                success = false;
+                
                 yield return StartCoroutine(SlipOnFloor());
                 yield return StartCoroutine(GetUp());
             }
 
             if (_boxesNotRemoved)
             {
+                success = false;
+                
                 yield return StartCoroutine(FallOnBoxes());
+            }
+
+            if (success)
+            {
+                _preparationsEffect.ShowSuccess();
             }
         }
 
         private IEnumerator SlipOnFloor()
         {
+            _preparationsEffect.ShowSlipMessage();
+            
             var time = 0f;
             var beginPosition = transform.position;
 
@@ -128,12 +147,9 @@ namespace Welder
                 ChangeSlipPosition(beginPosition, fraction);
 
                 time += Time.deltaTime;
-                Debug.Log(transform.rotation.eulerAngles);
 
                 yield return null;
             }
-            
-            Debug.Log(transform.rotation.eulerAngles);
         }
 
         private void ChangeSlipPosition(Vector3 beginPosition, float fraction)
@@ -154,12 +170,68 @@ namespace Welder
 
         private IEnumerator GetUp()
         {
-            yield return null;
+            yield return new WaitForSeconds(1f);
+            
+            var time = 0f;
+            var _currentPosition = transform.position;
+
+            while (time <= _timeToFallOnFloor)
+            {
+                var fraction = time / _timeToFallOnFloor;
+
+                ChangeGetUpRotation(fraction);
+                ChangeGetUpPosition(_currentPosition, fraction);
+
+                time += Time.deltaTime;
+
+                yield return null;
+            }
+            
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        private void ChangeGetUpPosition(Vector3 currentPosition, float fraction)
+        {
+            var position = currentPosition;
+            position.y += _fallOnFloorHeight * fraction;
+            
+            transform.position = position;
+        }
+
+        private void ChangeGetUpRotation(float fraction)
+        {
+            var rotation = transform.rotation.eulerAngles;
+            rotation.z = _fallOnFloorAngle * (1 - fraction);
+            
+            transform.eulerAngles = rotation;
         }
 
         private IEnumerator FallOnBoxes()
         {
-            yield return null;
+            _preparationsEffect.ShowFallMessage();
+            
+            var time = 0f;
+            var beginPosition = transform.position;
+
+            while (time <= _timeToFallOnBoxes)
+            {
+                var fraction = time / _timeToFallOnBoxes;
+                
+                ChangeFallPosition(beginPosition, fraction);
+
+                time += Time.deltaTime;
+
+                yield return null;
+            }
+        }
+
+        private void ChangeFallPosition(Vector3 beginPosition, float fraction)
+        {
+            var position = beginPosition;
+            position.y -= _fallOnBoxesHeight * fraction;
+            position.z += _fallOnBoxesDistance * fraction;
+            
+            transform.position = position;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace RoomObjects.Interactables
 {
     public class Preparable : MonoBehaviour, IInteractable
     {
-        public PreparableTypes UseableType => _preparableType;
+        public PreparableTypes PreparableType => _preparableType;
 
         [SerializeField] private PreparableTypes _preparableType;
         
@@ -15,7 +15,7 @@ namespace RoomObjects.Interactables
         public void ShowChoices()
         {
             _choicesManager.ShowEmptyChoices();
-            _preparableShower.Show();
+            _preparableShower.Show(this);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace UI
         [SerializeField] private Button _wipeFloor;
 
         private RoomRefiner _roomCleaner;
+        private Preparable _preparable;
 
         private bool _showing;
 
@@ -36,8 +37,10 @@ namespace UI
             CheckKeyPresses();
         }
 
-        public void Show()
+        public void Show(Preparable preparable)
         {
+            _preparable = preparable;
+            
             _preparableChoices.gameObject.SetActive(true);
             
             if (_showing)
@@ -86,6 +89,8 @@ namespace UI
 
             var boxesNotRemoved = _removeBoxes.IsInteractable();
             var floorNotWiped = _wipeFloor.IsInteractable();
+            
+            _preparable.gameObject.SetActive(false);
             
             _welderMotionAnimator.StartWorking(boxesNotRemoved, floorNotWiped);
         }
