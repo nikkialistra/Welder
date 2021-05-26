@@ -7,6 +7,7 @@ using Welder;
 namespace UI
 {
     [RequireComponent(typeof(RoomRefiner))]
+    [RequireComponent(typeof(ActionOutcome))]
     public class PreparableShower : MonoBehaviour
     {
         [SerializeField] private WelderMotionAnimator _welderMotionAnimator;
@@ -20,11 +21,14 @@ namespace UI
         private RoomRefiner _roomCleaner;
         private Preparable _preparable;
 
+        private ActionOutcome _actionOutcome;
+        
         private bool _showing;
 
         private void Awake()
         {
             _roomCleaner = GetComponent<RoomRefiner>();
+            _actionOutcome = GetComponent<ActionOutcome>();
         }
 
         private void Update()
@@ -72,6 +76,8 @@ namespace UI
         private void RemoveBoxes()
         {
             _removeBoxes.interactable = false;
+            
+            _actionOutcome.ShowCorrect();
 
             _roomCleaner.RemoveBoxes();
         }
@@ -79,6 +85,8 @@ namespace UI
         private void WipeFloor()
         {
             _wipeFloor.interactable = false;
+            
+            _actionOutcome.ShowCorrect();
 
             _roomCleaner.WipeFloor();
         }
@@ -89,6 +97,15 @@ namespace UI
 
             var boxesNotRemoved = _removeBoxes.IsInteractable();
             var floorNotWiped = _wipeFloor.IsInteractable();
+
+            if (boxesNotRemoved || floorNotWiped)
+            {
+                _actionOutcome.ShowDanger();
+            }
+            else
+            {
+                _actionOutcome.ShowCorrect();
+            }
             
             _preparable.gameObject.SetActive(false);
             

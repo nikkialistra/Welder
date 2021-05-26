@@ -3,6 +3,8 @@
     public enum UseableTypes
     {
         WeldingHandle,
-        Barrel
+        Barrel,
+        VentilationSystem,
+        FireExtinguisher
     }
 }

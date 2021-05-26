@@ -1,5 +1,6 @@
 ﻿using System;
 using RoomObjects.Interactables;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Welder;
@@ -12,9 +13,17 @@ namespace UI
         [SerializeField] private Equipment _equipment;
         [SerializeField] private WelderAnimator _welderAnimator;
 
+        [Space]
         [SerializeField] private RectTransform _useableChoices;
+        [SerializeField] private TextMeshProUGUI _text;
         
+        [Space]
         [SerializeField] private Button _use;
+
+        [Space]
+        [SerializeField] private CheckingEffect _checkingEffect;
+        
+        [Space] [SerializeField] private bool _checkingScene;
 
         private Useable _useable;
         private bool _showing;
@@ -46,12 +55,28 @@ namespace UI
                     {
                         return;
                     }
+                    _text.text = "Использовать (E)";
                     break;
                 case UseableTypes.Barrel:
                     if (!CheckRequirementsForBarrel())
                     {
                         return;
                     }
+                    _text.text = "Использовать (E)";
+                    break;
+                case UseableTypes.VentilationSystem:
+                    if (_checkingEffect.VentilationEnabled)
+                    {
+                        return;
+                    }
+                    _text.text = "Bключить вентиляцию (E)";
+                    break;
+                case UseableTypes.FireExtinguisher:
+                    if (_checkingEffect.FireExtinguisherChecked)
+                    {
+                        return;
+                    }
+                    _text.text = "Проверить исправность (E)";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -92,10 +117,31 @@ namespace UI
 
         private void Use()
         {
-            _use.interactable = false;
-
-            _objectUtilizer.Use(_useable);
-
+            switch (_useable.UseableType)
+            {
+                case UseableTypes.WeldingHandle:
+                    _use.interactable = false;
+                    _objectUtilizer.Use(_useable);
+                    break;
+                case UseableTypes.Barrel:
+                    _use.interactable = false;
+                    _objectUtilizer.Use(_useable);
+                    
+                    if (_checkingScene)
+                    {
+                        _checkingEffect.ShowResult();
+                    }
+                    break;
+                case UseableTypes.VentilationSystem:
+                    _checkingEffect.EnableVentilation();
+                    break;
+                case UseableTypes.FireExtinguisher:
+                    _checkingEffect.CheckFireExtinguisher();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             Hide();
         }
 

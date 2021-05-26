@@ -1,7 +1,4 @@
-﻿using System;
-using Effects;
-using TMPro;
-using UI;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,7 +32,7 @@ namespace Welder
 
             if (_shouldContinue && Input.GetKeyDown(KeyCode.T))
             {
-                //SceneManager.LoadScene("SecondScene");
+                SceneManager.LoadScene("ThirdScene");
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using UI;
+﻿using System;
+using UI;
 using UnityEngine;
 
 namespace RoomObjects.Interactables
@@ -7,7 +8,9 @@ namespace RoomObjects.Interactables
     {
         public EquipableTypes EquipableTypes => _equipableTypes;
 
-        public bool IsChecked { get; private set; }
+        public bool IsChecked => _isChecked;
+
+        [SerializeField] private bool _isChecked;
 
         [SerializeField] private ChoicesManager _choicesManager;
         
@@ -27,7 +30,7 @@ namespace RoomObjects.Interactables
 
         public void Check()
         {
-            IsChecked = true;
+            _isChecked = true;
         }
     }
 }
