@@ -8,7 +8,7 @@ namespace Welder
 {
     [RequireComponent(typeof(WelderAnimator))]
     [RequireComponent(typeof(Equipment))]
-    public class ActionEffect : MonoBehaviour
+    public class EquipEffect : MonoBehaviour
     {
         [SerializeField] private ActionOutcome _actionOutcome;
 

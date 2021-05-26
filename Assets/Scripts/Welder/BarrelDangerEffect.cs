@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using RoomObjects;
 using TMPro;
 using UI;
 using UnityEngine;
@@ -6,17 +7,16 @@ using UnityEngine.SceneManagement;
 
 namespace Welder
 {
-    public class IgnitionEffect : MonoBehaviour
+    public class BarrelDangerEffect : MonoBehaviour
     {
-        public bool FireActive => _fire.isPlaying;
+        [SerializeField] private BarrelMover _barrelMover;
         
+        [Space]
         [SerializeField] private TextMeshProUGUI _failMessage;
 
         [Space]
         [SerializeField] private TextMeshProUGUI _restartText;
-
         [SerializeField] private TextMeshProUGUI _continueText;
-
 
         [Space]
         [SerializeField] private ActionOutcome _actionOutcome;
@@ -24,10 +24,7 @@ namespace Welder
         [Space] 
         [SerializeField] private ParticleSystem _fire;
 
-        [SerializeField] private float _timeToPutOutFire;
-
-
-        private bool _firePutOut;
+        private bool _barrelsMovedAway;
 
         private bool _shouldRestart;
         private bool _shouldContinue;
@@ -44,25 +41,48 @@ namespace Welder
 
         public void ShowResult()
         {
-            StartCoroutine(MakeFire());
+            StartCoroutine(ShowResultAfter());
         }
 
-        public void PutOutFire()
+        private IEnumerator ShowResultAfter()
         {
-            _actionOutcome.ShowCorrect();
-            _firePutOut = true;
+            yield return new WaitForSeconds(2f);
+            if (_barrelsMovedAway)
+            {
+                _actionOutcome.ShowCorrect();
+                ShowSuccess();
+                _shouldContinue = true;
+            }
+            else
+            {
+                _actionOutcome.ShowDanger();
+                MakeFire();
+                ShowFailMessage();
+                _shouldRestart = true;
+            }
+        }
+
+        private void MakeFire()
+        {
+            _fire.Play();
+        }
+
+        public void MoveAwayBarrels()
+        {
+            _barrelMover.MoveAway();
+            _barrelsMovedAway = true;
         }
 
         private void LoadSceneIfNeeded()
         {
             if (_shouldRestart && Input.GetKeyDown(KeyCode.R))
             {
-                SceneManager.LoadScene("ThirdScene");
+                SceneManager.LoadScene("FifthScene");
             }
 
             if (_shouldContinue && Input.GetKeyDown(KeyCode.T))
             {
-                SceneManager.LoadScene("FourthScene");
+                Application.Quit();
             }
         }
 
@@ -78,43 +98,6 @@ namespace Welder
         {
             _shouldContinue = true;
             _continueText.enabled = true;
-        }
-
-        private IEnumerator MakeFire()
-        {
-            yield return new WaitForSeconds(2f);
-            _fire.Play();
-
-            StartCoroutine(GiveTimeToPutOutFire());
-        }
-
-        private IEnumerator GiveTimeToPutOutFire()
-        {
-            var timeLast = 0f;
-
-            while (timeLast <= _timeToPutOutFire)
-            {
-                if (_firePutOut)
-                {
-                    ShowSuccess();
-                    yield break;
-                }
-                
-                timeLast += Time.deltaTime;
-                
-                yield return null;
-            }
-
-            FailScene();
-        }
-
-        private void FailScene()
-        {
-            var shape = _fire.shape;
-            shape.radius = 3;
-
-            _actionOutcome.ShowDanger();
-            ShowFailMessage();
         }
     }
 }

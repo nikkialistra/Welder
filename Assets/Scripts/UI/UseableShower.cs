@@ -23,9 +23,12 @@ namespace UI
         [Space]
         [SerializeField] private CheckingEffect _checkingEffect;
         [SerializeField] private IgnitionEffect _ignitionEffect;
+        [SerializeField] private BarrelDangerEffect _barrelDangerEffect;
+        
         
         private bool _checkingScene;
         private bool _ignitionScene;
+        private bool _barrelDangerScene;
 
         private Useable _useable;
         
@@ -43,9 +46,9 @@ namespace UI
                 _ignitionScene = true;
             }
 
-            if (_checkingScene && _ignitionScene)
+            if (_barrelDangerEffect != null)
             {
-                throw new Exception("Scene cannot be for checking and ignition simultaneously.");
+                _barrelDangerScene = true;
             }
         }
 
@@ -98,6 +101,16 @@ namespace UI
                         return;
                     }
                     _text.text = "Проверить исправность (E)";
+                    break;
+                case UseableTypes.Sand:
+                    if (!_ignitionEffect.FireActive)
+                    {
+                        return;
+                    }
+                    _text.text = "Подавить огонь песком (Е)";
+                    break;
+                case UseableTypes.Barrels:
+                    _text.text = "Попросить убрать бочки не менее, чем на 5 метров (Е)";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -156,6 +169,18 @@ namespace UI
                 case UseableTypes.FireExtinguisher:
                     _checkingEffect.CheckFireExtinguisher();
                     break;
+                case UseableTypes.Sand:
+                    if (_ignitionScene)
+                    {
+                        _ignitionEffect.PutOutFire();
+                    }
+                    break;
+                case UseableTypes.Barrels:
+                    if (_barrelDangerScene)
+                    {
+                        _barrelDangerEffect.MoveAwayBarrels();
+                    }
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -173,6 +198,11 @@ namespace UI
             if (_ignitionScene)
             {
                 _ignitionEffect.ShowResult();
+            }
+            
+            if (_barrelDangerScene)
+            {
+                _barrelDangerEffect.ShowResult();
             }
         }
 

@@ -6,6 +6,7 @@
         Barrel,
         VentilationSystem,
         FireExtinguisher,
-        Sand
+        Sand,
+        Barrels
     }
 }
