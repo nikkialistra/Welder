@@ -5,6 +5,7 @@
         WeldingHandle,
         Barrel,
         VentilationSystem,
-        FireExtinguisher
+        FireExtinguisher,
+        Sand
     }
 }

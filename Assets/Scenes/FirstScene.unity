@@ -7600,7 +7600,10 @@ MonoBehaviour:
   _equipment: {fileID: 112604882}
   _welderAnimator: {fileID: 112604885}
   _useableChoices: {fileID: 1370813259}
+  _text: {fileID: 1595070642}
   _use: {fileID: 747160352}
+  _checkingEffect: {fileID: 0}
+  _checkingScene: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

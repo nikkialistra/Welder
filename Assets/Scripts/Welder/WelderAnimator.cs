@@ -57,7 +57,7 @@ namespace Welder
 
         private IEnumerator GetUpAfter()
         {
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(1.5f);
 
             _weldingHandle.StopWeldingProcess();
             

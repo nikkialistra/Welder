@@ -8,34 +8,26 @@ using UnityEngine.SceneManagement;
 
 namespace Welder
 {
-    public class CheckingEffect : MonoBehaviour
+    public class IgnitionEffect : MonoBehaviour
     {
-        public bool VentilationEnabled => _ventilationEnabled;
-        public bool FireExtinguisherChecked => _fireExtinguisherChecked;
-
         [SerializeField] private TextMeshProUGUI _failMessage;
-
+        
         [Space]
         [SerializeField] private TextMeshProUGUI _restartText;
         [SerializeField] private TextMeshProUGUI _continueText;
         
-        [Space] [SerializeField] private Ventilation _ventilation;
-        
+        [Space]
         [SerializeField] private ActionOutcome _actionOutcome;
         
         [Space] 
-        [SerializeField] private ParticleSystem _smoke;
-        
+        [SerializeField] private ParticleSystem _fire;
 
-        private bool _ventilationEnabled;
-        private bool _fireExtinguisherChecked;
-        
         private bool _shouldRestart;
         private bool _shouldContinue;
 
         private void Start()
         {
-            _smoke.Pause();
+            _fire.Pause();
         }
 
         private void Update()
@@ -70,45 +62,21 @@ namespace Welder
             _continueText.enabled = true;
         }
 
-        public void EnableVentilation()
+        private void ShowEffects()
         {
-            _ventilationEnabled = true;
-            _ventilation.Enable();
-            
-            _actionOutcome.ShowCorrect();
-        }
-
-        public void CheckFireExtinguisher()
-        {
-            _fireExtinguisherChecked = true;
-            
-            _actionOutcome.ShowCorrect();
+            _fire.Play();
+            RenderSettings.fog = true;
         }
 
         public void ShowResult()
         {
-            StartCoroutine(ShowResultThroughTime());
+            StartCoroutine(MakeFire());
         }
 
-        private IEnumerator ShowResultThroughTime()
+        private IEnumerator MakeFire()
         {
-            yield return new WaitForSeconds(1f);
-            
-            if (_ventilationEnabled && _fireExtinguisherChecked)
-            {
-                ShowSuccess();
-            }
-            else
-            {
-                ShowFailMessage();
-                ShowEffects();
-            }
-        }
-
-        private void ShowEffects()
-        {
-            _smoke.Play();
-            RenderSettings.fog = true;
+            yield return new WaitForSeconds(2f);
+            _fire.Play();
         }
     }
 }

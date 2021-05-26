@@ -22,11 +22,32 @@ namespace UI
 
         [Space]
         [SerializeField] private CheckingEffect _checkingEffect;
+        [SerializeField] private IgnitionEffect _ignitionEffect;
         
-        [Space] [SerializeField] private bool _checkingScene;
+        private bool _checkingScene;
+        private bool _ignitionScene;
 
         private Useable _useable;
+        
         private bool _showing;
+
+        private void Start()
+        {
+            if (_checkingEffect != null)
+            {
+                _checkingScene = true;
+            }
+
+            if (_ignitionEffect != null)
+            {
+                _ignitionScene = true;
+            }
+
+            if (_checkingScene && _ignitionScene)
+            {
+                throw new Exception("Scene cannot be for checking and ignition simultaneously.");
+            }
+        }
 
         private void Update()
         {
@@ -127,10 +148,7 @@ namespace UI
                     _use.interactable = false;
                     _objectUtilizer.Use(_useable);
                     
-                    if (_checkingScene)
-                    {
-                        _checkingEffect.ShowResult();
-                    }
+                    PickOutcome();
                     break;
                 case UseableTypes.VentilationSystem:
                     _checkingEffect.EnableVentilation();
@@ -143,6 +161,19 @@ namespace UI
             }
             
             Hide();
+        }
+
+        private void PickOutcome()
+        {
+            if (_checkingScene)
+            {
+                _checkingEffect.ShowResult();
+            }
+
+            if (_ignitionScene)
+            {
+                _ignitionEffect.ShowResult();
+            }
         }
 
         private void Hide()

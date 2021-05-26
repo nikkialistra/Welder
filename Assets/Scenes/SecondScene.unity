@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.04
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4402513, g: 0.4887985, b: 0.56897336, a: 1}
+  m_IndirectSpecularColor: {r: 0.44648463, g: 0.4963106, b: 0.57476217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4177,7 +4177,10 @@ MonoBehaviour:
   _equipment: {fileID: 112604882}
   _welderAnimator: {fileID: 112604885}
   _useableChoices: {fileID: 1370813259}
+  _text: {fileID: 0}
   _use: {fileID: 747160352}
+  _checkingEffect: {fileID: 0}
+  _checkingScene: 0
 --- !u!114 &851097922
 MonoBehaviour:
   m_ObjectHideFlags: 0
