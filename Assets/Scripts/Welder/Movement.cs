@@ -17,7 +17,9 @@ namespace Welder
         [SerializeField] private Transform _groundCheck;
         [SerializeField] private float _groundDistance = 0.3f;
         [SerializeField] private LayerMask _groundMask;
-
+        
+        [Space] [SerializeField] private AudioSource _footsteps;
+        
         private Vector3 _velocity;
         private bool _isGrounded;
 
@@ -35,6 +37,7 @@ namespace Welder
         {
             if (!CanMove)
             {
+                StopFootsteps();
                 return;
             }
             
@@ -50,7 +53,29 @@ namespace Welder
 
             var move = (transform.right * _currentDirection.x + transform.forward * _currentDirection.y) * _walkSpeed;
 
+            PlayFootstepsIfNeeded(move);
+
             _controller.Move(move * (_walkSpeed * Time.deltaTime));
+        }
+
+        private void PlayFootstepsIfNeeded(Vector3 move)
+        {
+            if (move != Vector3.zero)
+            {
+                if (!_footsteps.isPlaying)
+                {
+                    _footsteps.Play();
+                }
+            }
+            else
+            {
+                StopFootsteps();
+            }
+        }
+
+        private void StopFootsteps()
+        {
+            _footsteps.Stop();
         }
 
         private void UpdateFalling()

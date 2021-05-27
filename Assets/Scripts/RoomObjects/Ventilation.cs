@@ -9,9 +9,13 @@ namespace RoomObjects
 
         [SerializeField] private float _oscillationAmplitude;
         
+        [Space] 
+        [SerializeField] private AudioSource _ventilationWorking;
 
         public void Enable()
         {
+            _ventilationWorking.Play();
+            
             StartCoroutine(OscillateTube());
         }
 

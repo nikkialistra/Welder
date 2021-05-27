@@ -17,6 +17,10 @@ namespace UI
         [SerializeField] private Button _startWorking;
         [SerializeField] private Button _removeBoxes;
         [SerializeField] private Button _wipeFloor;
+        
+        [Space] 
+        [SerializeField] private AudioSource _wipe;
+        [SerializeField] private AudioSource _takeAwayBoxes;
 
         private RoomRefiner _roomCleaner;
         private Preparable _preparable;
@@ -75,6 +79,8 @@ namespace UI
 
         private void RemoveBoxes()
         {
+            _takeAwayBoxes.Play();
+            
             _removeBoxes.interactable = false;
             
             _actionOutcome.ShowCorrect();
@@ -84,6 +90,8 @@ namespace UI
 
         private void WipeFloor()
         {
+            _wipe.Play();
+            
             _wipeFloor.interactable = false;
             
             _actionOutcome.ShowCorrect();

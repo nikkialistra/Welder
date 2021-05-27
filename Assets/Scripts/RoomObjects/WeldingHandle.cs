@@ -9,7 +9,9 @@ namespace RoomObjects
         [SerializeField] private Transform _lineEndPosition;
         
         [SerializeField] private ParticleSystem _particleSystem;
-
+        
+        [Space] [SerializeField] private AudioSource _welding;
+        
         private LineRenderer _lineRenderer;
 
         private void Awake()
@@ -31,12 +33,16 @@ namespace RoomObjects
 
         public void ShowWeldingProcess()
         {
+            _welding.Play();
+            
             _particleSystem.Play();
             _particleSystem.gameObject.SetActive(true);
         }
 
         public void StopWeldingProcess()
         {
+            _welding.Stop();
+            
             _particleSystem.Pause();
             _particleSystem.gameObject.SetActive(false);
         }

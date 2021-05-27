@@ -14,6 +14,8 @@ namespace UI
 
         [SerializeField] private Button _checkEquipment;
         [SerializeField] private Button _use;
+        
+        [Space] [SerializeField] private AudioSource _check;
 
         private ActionOutcome _actionOutcome;
 
@@ -102,6 +104,7 @@ namespace UI
 
         private void CheckEquipment()
         {
+            _check.Play();   
             _checkEquipment.interactable = false;
             _equipable.Check();
             

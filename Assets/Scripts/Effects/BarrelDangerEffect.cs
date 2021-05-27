@@ -23,6 +23,9 @@ namespace Effects
 
         [Space] 
         [SerializeField] private ParticleSystem _fire;
+        
+        [Space]
+        [SerializeField] private AudioSource _burning;
 
         private bool _barrelsMovedAway;
 
@@ -64,6 +67,7 @@ namespace Effects
 
         private void MakeFire()
         {
+            _burning.Play();
             _fire.Play();
         }
 

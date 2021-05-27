@@ -30,7 +30,7 @@ namespace Welder
                 return _gloves.IsChecked;
             }
         }
-
+        
         [SerializeField] private RectTransform _weldingMask;
 
         [SerializeField] private Transform _handWithoutGloves;
@@ -41,6 +41,10 @@ namespace Welder
         [Space]
         [SerializeField] private Equipable _mask;
         [SerializeField] private Equipable _gloves;
+        
+        [Space]
+        [SerializeField] private AudioSource _equipMask;
+        [SerializeField] private AudioSource _equipGloves;
         
         private bool _wasChecked;
 
@@ -53,12 +57,12 @@ namespace Welder
         {
             if (_mask != null)
             {
-                ShowMask();
+                EquipMask();
             }
 
             if (_gloves != null)
             {
-                ShowGloves();
+                EquipGloves();
             }
         }
 
@@ -68,11 +72,13 @@ namespace Welder
             {
                 case EquipableTypes.Mask:
                     _mask = equipable;
-                    ShowMask();
+                    _equipMask.Play();
+                    EquipMask();
                     break;
                 case EquipableTypes.Gloves:
                     _gloves = equipable;
-                    ShowGloves();
+                    _equipGloves.Play();
+                    EquipGloves();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -81,12 +87,12 @@ namespace Welder
             equipable.Hide();
         }
 
-        private void ShowMask()
+        private void EquipMask()
         {
             _weldingMask.gameObject.SetActive(true);
         }
 
-        private void ShowGloves()
+        private void EquipGloves()
         {
             Destroy(_handWithoutGloves.gameObject);
             

@@ -26,6 +26,10 @@ namespace Welder
         
         [Space] 
         [SerializeField] private PreparationsEffect _preparationsEffect;
+        
+        [Space] 
+        [SerializeField] private AudioSource _fallDown;
+        [SerializeField] private AudioSource _slip;
 
         private NavMeshAgent _navMeshAgent;
         private CharacterController _characterController;
@@ -133,6 +137,7 @@ namespace Welder
 
         private IEnumerator SlipOnFloor()
         {
+            _slip.Play();
             _preparationsEffect.ShowSlipMessage();
             
             var time = 0f;
@@ -207,6 +212,7 @@ namespace Welder
 
         private IEnumerator FallOnBoxes()
         {
+            _fallDown.Play();
             _preparationsEffect.ShowFallMessage();
             
             var time = 0f;

@@ -22,6 +22,8 @@ namespace Effects
         [Space]
         [SerializeField] private TextMeshProUGUI _restartText;
         [SerializeField] private TextMeshProUGUI _continueText;
+        
+        [Space] [SerializeField] private AudioSource _hurted;
 
         private bool _shouldRestart;
         private bool _shouldContinue;
@@ -67,6 +69,8 @@ namespace Effects
 
         private void ShowOutcomeEffects()
         {
+            _hurted.Play();
+            
             if (!_equipment.MaskChecked)
             {
                 _blindnessEffect.Show();

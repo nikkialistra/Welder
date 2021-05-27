@@ -11,6 +11,9 @@ namespace Welder
         
         [SerializeField] private Transform _weldingHandlePosition;
         
+        [Space] [SerializeField] private AudioSource _takeWeldingHandle;
+        
+        
         private Useable _useable;
         
         private WelderAnimator _welderAnimator;
@@ -38,6 +41,8 @@ namespace Welder
 
         private void TakeWeldingHandle(Useable useable)
         {
+            _takeWeldingHandle.Play();
+            
             var useableTransform = useable.transform;
             
             useableTransform.parent = _weldingHandlePosition;

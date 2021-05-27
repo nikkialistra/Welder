@@ -26,6 +26,9 @@ namespace Effects
 
         [SerializeField] private float _timeToPutOutFire;
 
+        [Space]
+        [SerializeField] private AudioSource _putOutWithSand;
+        [SerializeField] private AudioSource _burning;
 
         private bool _firePutOut;
 
@@ -49,6 +52,8 @@ namespace Effects
 
         public void PutOutFire()
         {
+            _putOutWithSand.Play();
+            
             _actionOutcome.ShowCorrect();
             _firePutOut = true;
         }
@@ -76,6 +81,7 @@ namespace Effects
 
         private void ShowSuccess()
         {
+            _burning.Stop();
             _fire.Stop();
             
             _shouldContinue = true;
@@ -85,6 +91,7 @@ namespace Effects
         private IEnumerator MakeFire()
         {
             yield return new WaitForSeconds(2f);
+            _burning.Play();
             _fire.Play();
 
             StartCoroutine(GiveTimeToPutOutFire());

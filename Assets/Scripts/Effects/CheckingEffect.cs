@@ -25,6 +25,9 @@ namespace Effects
         [Space] 
         [SerializeField] private ParticleSystem _smoke;
         
+        [Space] 
+        [SerializeField] private AudioSource _check;
+        [SerializeField] private AudioSource _fog;
 
         private bool _ventilationEnabled;
         private bool _fireExtinguisherChecked;
@@ -70,6 +73,8 @@ namespace Effects
 
         public void CheckFireExtinguisher()
         {
+            _check.Play();
+            
             _fireExtinguisherChecked = true;
             
             _actionOutcome.ShowCorrect();
@@ -108,6 +113,7 @@ namespace Effects
 
         private void ShowEffects()
         {
+            _fog.Play();
             _smoke.Play();
             RenderSettings.fog = true;
         }
