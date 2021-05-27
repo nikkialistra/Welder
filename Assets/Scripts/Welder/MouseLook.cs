@@ -53,11 +53,13 @@ namespace Welder
         private static void BlockCursor()
         {
             Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         private static void UnblockCursor()
         {
             Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         private void Update()
