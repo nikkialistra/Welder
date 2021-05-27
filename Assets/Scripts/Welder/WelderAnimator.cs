@@ -9,7 +9,7 @@ namespace Welder
     [RequireComponent(typeof(Movement))]
     public class WelderAnimator : MonoBehaviour
     {
-        public Action Welding;
+        public event Action Welding;
         
         public bool IsWelding { get; private set; } = false;
 

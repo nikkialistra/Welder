@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UI;
+using UnityEngine;
 
 namespace Welder
 {
@@ -11,6 +13,9 @@ namespace Welder
         [SerializeField] private float _mouseSensitivity = 100f;
         [SerializeField] private float _mouseSmoothTime = 0.03f;
 
+        [Space]
+        [SerializeField] private Menu _menu;
+
         private float yRotation;
         
         private Vector2 _currentMouseDelta;
@@ -18,7 +23,41 @@ namespace Welder
 
         private void Start()
         {
+            BlockCursor();
+        }
+
+        private void OnEnable()
+        {
+            _menu.Show += OnMenuShow;
+            _menu.Hide += OnMenuHide;
+        }
+
+        private void OnDisable()
+        {
+            _menu.Show -= OnMenuShow;
+            _menu.Hide -= OnMenuHide;
+        }
+
+        private void OnMenuHide()
+        {
+            CanRotate = true;
+            BlockCursor();
+        }
+
+        private void OnMenuShow()
+        {
+            CanRotate = false;
+            UnblockCursor();
+        }
+
+        private static void BlockCursor()
+        {
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        private static void UnblockCursor()
+        {
+            Cursor.lockState = CursorLockMode.None;
         }
 
         private void Update()

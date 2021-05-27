@@ -38,7 +38,7 @@ namespace Effects
 
         private void LoadSceneIfNeeded()
         {
-            if (_shouldRestart && Input.GetKeyDown(KeyCode.R))
+            if ((_shouldRestart || _shouldContinue) && Input.GetKeyDown(KeyCode.R))
             {
                 SceneManager.LoadScene("FirstScene");
             }

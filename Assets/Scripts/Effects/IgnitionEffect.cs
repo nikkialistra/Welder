@@ -55,7 +55,7 @@ namespace Effects
 
         private void LoadSceneIfNeeded()
         {
-            if (_shouldRestart && Input.GetKeyDown(KeyCode.R))
+            if ((_shouldRestart || _shouldContinue) && Input.GetKeyDown(KeyCode.R))
             {
                 SceneManager.LoadScene("FourthScene");
             }
@@ -76,6 +76,8 @@ namespace Effects
 
         private void ShowSuccess()
         {
+            _fire.Stop();
+            
             _shouldContinue = true;
             _continueText.enabled = true;
         }
