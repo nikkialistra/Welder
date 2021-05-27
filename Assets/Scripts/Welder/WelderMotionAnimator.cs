@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Effects;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,7 +8,6 @@ namespace Welder
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(Movement))]
-    [RequireComponent(typeof(PreparationsEffect))]
     public class WelderMotionAnimator : MonoBehaviour
     {
         [SerializeField] private Transform _tableWorkingPoint;
@@ -41,7 +41,6 @@ namespace Welder
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _characterController = GetComponent<CharacterController>();
             _movement = GetComponent<Movement>();
-            _preparationsEffect = GetComponent<PreparationsEffect>();
         }
 
         public void StartWorking(bool boxesNotRemoved, bool floorNotWiped)

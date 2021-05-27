@@ -1,4 +1,5 @@
 ﻿using System;
+using Effects;
 using RoomObjects.Interactables;
 using TMPro;
 using UnityEngine;
