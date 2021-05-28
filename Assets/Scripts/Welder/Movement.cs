@@ -9,16 +9,9 @@ namespace Welder
         
         [SerializeField] private float _walkSpeed = 12f;
         [SerializeField] private float _smoothTime = 0.03f;
-        
-        [Space]
-        [SerializeField] private float _gravity = 15;
 
-        [Space]
-        [SerializeField] private Transform _groundCheck;
-        [SerializeField] private float _groundDistance = 0.3f;
-        [SerializeField] private LayerMask _groundMask;
-        
-        [Space] [SerializeField] private AudioSource _footsteps;
+        [Space] 
+        [SerializeField] private AudioSource _footsteps;
         
         private Vector3 _velocity;
         private bool _isGrounded;
@@ -41,7 +34,6 @@ namespace Welder
                 return;
             }
             
-            UpdateFalling();
             UpdateMoving();
         }
 
@@ -76,22 +68,6 @@ namespace Welder
         private void StopFootsteps()
         {
             _footsteps.Stop();
-        }
-
-        private void UpdateFalling()
-        {
-            _isGrounded = Physics.CheckSphere(_groundCheck.position, _groundDistance, _groundMask);
-
-            if (_isGrounded)
-            {
-                _velocity.y = -2f;
-            }
-            else
-            {
-                _velocity.y += _gravity * Time.deltaTime;
-            }
-
-            _controller.Move(_velocity * Time.deltaTime);
         }
     }
 }

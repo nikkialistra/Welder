@@ -20,6 +20,11 @@ namespace UI
             }
         }
 
+        private void Start()
+        {
+            ShowMenu();
+        }
+
         private void ToggleMenu()
         {
             if (_showing)

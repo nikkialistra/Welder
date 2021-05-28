@@ -21,11 +21,6 @@ namespace Welder
         private Vector2 _currentMouseDelta;
         private Vector2 _currentMouseDeltaVelocity;
 
-        private void Start()
-        {
-            BlockCursor();
-        }
-
         private void OnEnable()
         {
             _menu.Show += OnMenuShow;

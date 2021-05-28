@@ -69,6 +69,7 @@ namespace UI
             if (Input.GetKeyDown(KeyCode.E))
             {
                 WipeFloor();
+                TakeOffItems();
             }
             
             if (Input.GetKeyDown(KeyCode.Space))
@@ -97,6 +98,11 @@ namespace UI
             _actionOutcome.ShowCorrect();
 
             _roomCleaner.WipeFloor();
+        }
+
+        private void TakeOffItems()
+        {
+            _roomCleaner.TakeOffItems();
         }
 
         private void StartWorking()

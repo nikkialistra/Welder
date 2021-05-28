@@ -8,6 +8,7 @@ namespace RoomObjects
         [SerializeField] private GameObject _putBoxes;
 
         [SerializeField] private GameObject _puddle;
+        [SerializeField] private GameObject _items;
 
         private bool _boxesRemoved;
         private bool _floorWiped;
@@ -21,6 +22,11 @@ namespace RoomObjects
         public void WipeFloor()
         {
             _puddle.SetActive(false);
+        }
+
+        public void TakeOffItems()
+        {
+            _items.SetActive(false);
         }
     }
 }
